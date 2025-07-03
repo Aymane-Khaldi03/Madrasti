@@ -18,6 +18,7 @@ import {
   type Notification,
   type InsertNotification
 } from "@shared/schema";
+import { db } from "./firebase-admin.js";
 
 export interface IStorage {
   // User methods
@@ -63,426 +64,247 @@ export interface IStorage {
   deleteNotification(id: number): Promise<boolean>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User> = new Map();
-  private courses: Map<number, Course> = new Map();
-  private enrollments: Map<number, Enrollment> = new Map();
-  private assignments: Map<number, Assignment> = new Map();
-  private submissions: Map<number, Submission> = new Map();
-  private notifications: Map<number, Notification> = new Map();
-  private currentUserId: number = 1;
-  private currentCourseId: number = 1;
-  private currentEnrollmentId: number = 1;
-  private currentAssignmentId: number = 1;
-  private currentSubmissionId: number = 1;
-  private currentNotificationId: number = 1;
-
+export class FirebaseStorage implements IStorage {
+  private usersCollection;
+  private coursesCollection;
+  private enrollmentsCollection;
+  private assignmentsCollection;
+  private submissionsCollection;
+  private notificationsCollection;
   constructor() {
-    // Initialize with some sample data
-    this.initializeSampleData();
+    this.usersCollection = db.collection('users');
+    this.coursesCollection = db.collection('courses');
+    this.enrollmentsCollection = db.collection('enrollments');
+    this.assignmentsCollection = db.collection('assignments');
+    this.submissionsCollection = db.collection('submissions');
+    this.notificationsCollection = db.collection('notifications');
   }
 
-  private initializeSampleData() {
-    // Sample Moroccan student with comprehensive data
-    const student: User = {
-      id: this.currentUserId++,
-      firebaseUid: "student-1",
-      email: "student@example.com",
-      name: "Fatima Zahra Benali",
-      role: "student",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      // Moroccan student fields
-      massarId: "ST20241001",
-      cne: "R148523697",
-      apogee: "21001234",
-      arabicName: "فاطمة الزهراء بنعلي",
-      latinName: "Fatima Zahra Benali",
-      cin: "AB123456",
-      cinIssuePlace: "Casablanca",
-      cinIssueDate: "2006-01-15",
-      wilaya: "Casablanca-Settat",
-      province: "Casablanca",
-      communeOfBirth: "Casablanca",
-      academicCycle: "Lycée",
-      track: "Sciences Mathématiques",
-      boursier: true,
-      scholarshipAmount: "2500.00",
-      redoublement: false,
-      repeatCount: 0,
-      guardianNameArabic: "أحمد بنعلي",
-      guardianRelationship: "أب",
-      guardianPhone: "+212661234567",
-      noteConduite: "18.5",
-      feesInsurance: "200.00",
-      feesCooperative: "150.00",
-      feesCanteen: "800.00",
-      feesStatus: "paid",
-      feesLastPaid: "2024-09-01"
-    };
-
-    const professor: User = {
-      id: this.currentUserId++,
-      firebaseUid: "professor-1",
-      email: "professor@example.com",
-      name: "Dr. Youssef Alami",
-      role: "professor",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      // Non-student users have null values for student-specific fields
-      massarId: null,
-      cne: null,
-      apogee: null,
-      arabicName: "د. يوسف العلمي",
-      latinName: "Dr. Youssef Alami",
-      cin: null,
-      cinIssuePlace: null,
-      cinIssueDate: null,
-      wilaya: null,
-      province: null,
-      communeOfBirth: null,
-      academicCycle: null,
-      track: null,
-      boursier: null,
-      scholarshipAmount: null,
-      redoublement: null,
-      repeatCount: null,
-      guardianNameArabic: null,
-      guardianRelationship: null,
-      guardianPhone: null,
-      noteConduite: null,
-      feesInsurance: null,
-      feesCooperative: null,
-      feesCanteen: null,
-      feesStatus: null,
-      feesLastPaid: null
-    };
-
-    const admin: User = {
-      id: this.currentUserId++,
-      firebaseUid: "admin-1",
-      email: "admin@example.com",
-      name: "Amina Hassani",
-      role: "admin",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      // Admin user with null values for student-specific fields
-      massarId: null,
-      cne: null,
-      apogee: null,
-      arabicName: "آمينة حساني",
-      latinName: "Amina Hassani",
-      cin: null,
-      cinIssuePlace: null,
-      cinIssueDate: null,
-      wilaya: null,
-      province: null,
-      communeOfBirth: null,
-      academicCycle: null,
-      track: null,
-      boursier: null,
-      scholarshipAmount: null,
-      redoublement: null,
-      repeatCount: null,
-      guardianNameArabic: null,
-      guardianRelationship: null,
-      guardianPhone: null,
-      noteConduite: null,
-      feesInsurance: null,
-      feesCooperative: null,
-      feesCanteen: null,
-      feesStatus: null,
-      feesLastPaid: null
-    };
-
-    // For demo purposes, add password field
-    (student as any).password = "student123";
-    (professor as any).password = "professor123";
-    (admin as any).password = "admin123";
-
-    this.users.set(student.id, student);
-    this.users.set(professor.id, professor);
-    this.users.set(admin.id, admin);
-
-    // Sample courses
-    const calculus: Course = {
-      id: this.currentCourseId++,
-      title: "Calculus I",
-      description: "Introduction to differential and integral calculus",
-      professorId: professor.id,
-      code: "MATH101",
-      credits: 3,
-      schedule: { days: ["Monday", "Wednesday", "Friday"], time: "10:00 AM" },
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    const physics: Course = {
-      id: this.currentCourseId++,
-      title: "Physics II",
-      description: "Electricity and magnetism",
-      professorId: professor.id,
-      code: "PHYS201",
-      credits: 4,
-      schedule: { days: ["Tuesday", "Thursday"], time: "2:00 PM" },
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    this.courses.set(calculus.id, calculus);
-    this.courses.set(physics.id, physics);
-
-    // Sample enrollment
-    const enrollment: Enrollment = {
-      id: this.currentEnrollmentId++,
-      studentId: student.id,
-      courseId: calculus.id,
-      enrolledAt: new Date(),
-      status: "active",
-    };
-
-    this.enrollments.set(enrollment.id, enrollment);
-  }
-
-  // User methods
+  // --- User methods ---
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const doc = await this.usersCollection.doc(id.toString()).get();
+    if (!doc.exists) return undefined;
+    const data = doc.data();
+    return this.mapUser(doc.id, data);
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.email === email);
+    const snapshot = await this.usersCollection.where('email', '==', email).get();
+    if (snapshot.empty) return undefined;
+    const doc = snapshot.docs[0];
+    return this.mapUser(doc.id, doc.data());
   }
 
   async getAllUsers(): Promise<User[]> {
-    return Array.from(this.users.values());
+    const snapshot = await this.usersCollection.get();
+    return snapshot.docs.map((doc: any) => this.mapUser(doc.id, doc.data()));
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = {
-      ...insertUser,
-      id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.users.set(id, user);
-    return user;
+  async createUser(user: InsertUser): Promise<User> {
+    // Generate a new numeric id (Firestore does not auto-increment, so use timestamp or a counter if needed)
+    const docRef = await this.usersCollection.add(user);
+    const doc = await docRef.get();
+    return this.mapUser(doc.id, doc.data());
   }
 
   async updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-
-    const updatedUser: User = {
-      ...user,
-      ...updates,
-      updatedAt: new Date(),
-    };
-    this.users.set(id, updatedUser);
-    return updatedUser;
+    const docRef = this.usersCollection.doc(id.toString());
+    await docRef.update(updates);
+    const doc = await docRef.get();
+    if (!doc.exists) return undefined;
+    return this.mapUser(doc.id, doc.data());
   }
 
   async deleteUser(id: number): Promise<boolean> {
-    return this.users.delete(id);
+    await this.usersCollection.doc(id.toString()).delete();
+    return true;
   }
 
-  // Course methods
+  // --- Course methods ---
   async getCourse(id: number): Promise<Course | undefined> {
-    return this.courses.get(id);
+    const doc = await this.coursesCollection.doc(id.toString()).get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Course;
   }
 
   async getAllCourses(): Promise<Course[]> {
-    return Array.from(this.courses.values());
+    const snapshot = await this.coursesCollection.get();
+    return snapshot.docs.map((doc: any) => ({ id: Number(doc.id), ...doc.data() } as Course));
   }
 
-  async createCourse(insertCourse: InsertCourse): Promise<Course> {
-    const id = this.currentCourseId++;
-    const course: Course = {
-      ...insertCourse,
-      id,
-      description: insertCourse.description || null,
-      professorId: insertCourse.professorId || null,
-      credits: insertCourse.credits || null,
-      schedule: insertCourse.schedule || null,
-      isActive: insertCourse.isActive !== undefined ? insertCourse.isActive : null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.courses.set(id, course);
-    return course;
+  async createCourse(course: InsertCourse): Promise<Course> {
+    const docRef = await this.coursesCollection.add(course);
+    const doc = await docRef.get();
+    return { id: Number(doc.id), ...doc.data() } as Course;
   }
 
   async updateCourse(id: number, updates: Partial<InsertCourse>): Promise<Course | undefined> {
-    const course = this.courses.get(id);
-    if (!course) return undefined;
-
-    const updatedCourse: Course = {
-      ...course,
-      ...updates,
-      updatedAt: new Date(),
-    };
-    this.courses.set(id, updatedCourse);
-    return updatedCourse;
+    const docRef = this.coursesCollection.doc(id.toString());
+    await docRef.update(updates);
+    const doc = await docRef.get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Course;
   }
 
   async deleteCourse(id: number): Promise<boolean> {
-    return this.courses.delete(id);
+    await this.coursesCollection.doc(id.toString()).delete();
+    return true;
   }
 
-  // Enrollment methods
+  // --- Enrollment methods ---
   async getEnrollment(id: number): Promise<Enrollment | undefined> {
-    return this.enrollments.get(id);
+    const doc = await this.enrollmentsCollection.doc(id.toString()).get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Enrollment;
   }
 
   async getAllEnrollments(): Promise<Enrollment[]> {
-    return Array.from(this.enrollments.values());
+    const snapshot = await this.enrollmentsCollection.get();
+    return snapshot.docs.map((doc: any) => ({ id: Number(doc.id), ...doc.data() } as Enrollment));
   }
 
-  async createEnrollment(insertEnrollment: InsertEnrollment): Promise<Enrollment> {
-    const id = this.currentEnrollmentId++;
-    const enrollment: Enrollment = {
-      id,
-      studentId: insertEnrollment.studentId || null,
-      courseId: insertEnrollment.courseId || null,
-      status: insertEnrollment.status || null,
-      enrolledAt: new Date(),
-    };
-    this.enrollments.set(id, enrollment);
-    return enrollment;
+  async createEnrollment(enrollment: InsertEnrollment): Promise<Enrollment> {
+    const docRef = await this.enrollmentsCollection.add(enrollment);
+    const doc = await docRef.get();
+    return { id: Number(doc.id), ...doc.data() } as Enrollment;
   }
 
   async deleteEnrollment(id: number): Promise<boolean> {
-    return this.enrollments.delete(id);
+    await this.enrollmentsCollection.doc(id.toString()).delete();
+    return true;
   }
 
-  // Assignment methods
+  // --- Assignment methods ---
   async getAssignment(id: number): Promise<Assignment | undefined> {
-    return this.assignments.get(id);
+    const doc = await this.assignmentsCollection.doc(id.toString()).get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Assignment;
   }
 
   async getAllAssignments(): Promise<Assignment[]> {
-    return Array.from(this.assignments.values());
+    const snapshot = await this.assignmentsCollection.get();
+    return snapshot.docs.map((doc: any) => ({ id: Number(doc.id), ...doc.data() } as Assignment));
   }
 
-  async createAssignment(insertAssignment: InsertAssignment): Promise<Assignment> {
-    const id = this.currentAssignmentId++;
-    const assignment: Assignment = {
-      id,
-      title: insertAssignment.title,
-      description: insertAssignment.description || null,
-      courseId: insertAssignment.courseId || null,
-      dueDate: insertAssignment.dueDate,
-      maxPoints: insertAssignment.maxPoints || null,
-      fileUrl: insertAssignment.fileUrl || null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.assignments.set(id, assignment);
-    return assignment;
+  async createAssignment(assignment: InsertAssignment): Promise<Assignment> {
+    const docRef = await this.assignmentsCollection.add(assignment);
+    const doc = await docRef.get();
+    return { id: Number(doc.id), ...doc.data() } as Assignment;
   }
 
   async updateAssignment(id: number, updates: Partial<InsertAssignment>): Promise<Assignment | undefined> {
-    const assignment = this.assignments.get(id);
-    if (!assignment) return undefined;
-
-    const updatedAssignment: Assignment = {
-      ...assignment,
-      ...updates,
-      updatedAt: new Date(),
-    };
-    this.assignments.set(id, updatedAssignment);
-    return updatedAssignment;
+    const docRef = this.assignmentsCollection.doc(id.toString());
+    await docRef.update(updates);
+    const doc = await docRef.get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Assignment;
   }
 
   async deleteAssignment(id: number): Promise<boolean> {
-    return this.assignments.delete(id);
+    await this.assignmentsCollection.doc(id.toString()).delete();
+    return true;
   }
 
-  // Submission methods
+  // --- Submission methods ---
   async getSubmission(id: number): Promise<Submission | undefined> {
-    return this.submissions.get(id);
+    const doc = await this.submissionsCollection.doc(id.toString()).get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Submission;
   }
 
   async getAllSubmissions(): Promise<Submission[]> {
-    return Array.from(this.submissions.values());
+    const snapshot = await this.submissionsCollection.get();
+    return snapshot.docs.map((doc: any) => ({ id: Number(doc.id), ...doc.data() } as Submission));
   }
 
-  async createSubmission(insertSubmission: InsertSubmission): Promise<Submission> {
-    const id = this.currentSubmissionId++;
-    const submission: Submission = {
-      id,
-      assignmentId: insertSubmission.assignmentId || null,
-      studentId: insertSubmission.studentId || null,
-      fileUrl: insertSubmission.fileUrl || null,
-      content: insertSubmission.content || null,
-      status: insertSubmission.status || null,
-      grade: insertSubmission.grade || null,
-      feedback: insertSubmission.feedback || null,
-      submittedAt: new Date(),
-      gradedAt: null,
-    };
-    this.submissions.set(id, submission);
-    return submission;
+  async createSubmission(submission: InsertSubmission): Promise<Submission> {
+    const docRef = await this.submissionsCollection.add(submission);
+    const doc = await docRef.get();
+    return { id: Number(doc.id), ...doc.data() } as Submission;
   }
 
   async updateSubmission(id: number, updates: Partial<InsertSubmission>): Promise<Submission | undefined> {
-    const submission = this.submissions.get(id);
-    if (!submission) return undefined;
-
-    const updatedSubmission: Submission = {
-      ...submission,
-      ...updates,
-      gradedAt: updates.grade ? new Date() : submission.gradedAt,
-    };
-    this.submissions.set(id, updatedSubmission);
-    return updatedSubmission;
+    const docRef = this.submissionsCollection.doc(id.toString());
+    await docRef.update(updates);
+    const doc = await docRef.get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Submission;
   }
 
   async deleteSubmission(id: number): Promise<boolean> {
-    return this.submissions.delete(id);
+    await this.submissionsCollection.doc(id.toString()).delete();
+    return true;
   }
 
-  // Notification methods
+  // --- Notification methods ---
   async getNotification(id: number): Promise<Notification | undefined> {
-    return this.notifications.get(id);
+    const doc = await this.notificationsCollection.doc(id.toString()).get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Notification;
   }
 
   async getAllNotifications(): Promise<Notification[]> {
-    return Array.from(this.notifications.values());
+    const snapshot = await this.notificationsCollection.get();
+    return snapshot.docs.map((doc: any) => ({ id: Number(doc.id), ...doc.data() } as Notification));
   }
 
-  async createNotification(insertNotification: InsertNotification): Promise<Notification> {
-    const id = this.currentNotificationId++;
-    const notification: Notification = {
-      id,
-      userId: insertNotification.userId || null,
-      title: insertNotification.title,
-      message: insertNotification.message,
-      type: insertNotification.type,
-      isRead: insertNotification.isRead || null,
-      createdAt: new Date(),
-    };
-    this.notifications.set(id, notification);
-    return notification;
+  async createNotification(notification: InsertNotification): Promise<Notification> {
+    const docRef = await this.notificationsCollection.add(notification);
+    const doc = await docRef.get();
+    return { id: Number(doc.id), ...doc.data() } as Notification;
   }
 
   async updateNotification(id: number, updates: Partial<InsertNotification>): Promise<Notification | undefined> {
-    const notification = this.notifications.get(id);
-    if (!notification) return undefined;
-
-    const updatedNotification: Notification = {
-      ...notification,
-      ...updates,
-    };
-    this.notifications.set(id, updatedNotification);
-    return updatedNotification;
+    const docRef = this.notificationsCollection.doc(id.toString());
+    await docRef.update(updates);
+    const doc = await docRef.get();
+    if (!doc.exists) return undefined;
+    return { id: Number(doc.id), ...doc.data() } as Notification;
   }
 
   async deleteNotification(id: number): Promise<boolean> {
-    return this.notifications.delete(id);
+    await this.notificationsCollection.doc(id.toString()).delete();
+    return true;
+  }
+
+  // --- Helper for User mapping ---
+  private mapUser(id: string, data: any): User {
+    return {
+      id: typeof id === 'string' ? parseInt(id, 10) : (typeof id === 'number' ? id : 0),
+      firebaseUid: data.firebaseUid ?? null,
+      email: data.email ?? null,
+      name: data.name ?? null,
+      role: data.role ?? null,
+      createdAt: data.createdAt ?? null,
+      updatedAt: data.updatedAt ?? null,
+      massarId: data.massarId ?? null,
+      cne: data.cne ?? null,
+      apogee: data.apogee ?? null,
+      arabicName: data.arabicName ?? null,
+      latinName: data.latinName ?? null,
+      cin: data.cin ?? null,
+      cinIssuePlace: data.cinIssuePlace ?? null,
+      cinIssueDate: data.cinIssueDate ?? null,
+      wilaya: data.wilaya ?? null,
+      province: data.province ?? null,
+      communeOfBirth: data.communeOfBirth ?? null,
+      academicCycle: data.academicCycle ?? null,
+      track: data.track ?? null,
+      boursier: data.boursier ?? null,
+      scholarshipAmount: data.scholarshipAmount ?? null,
+      redoublement: data.redoublement ?? null,
+      repeatCount: data.repeatCount ?? null,
+      guardianNameArabic: data.guardianNameArabic ?? null,
+      guardianRelationship: data.guardianRelationship ?? null,
+      guardianPhone: data.guardianPhone ?? null,
+      noteConduite: data.noteConduite ?? null,
+      feesInsurance: data.feesInsurance ?? null,
+      feesCooperative: data.feesCooperative ?? null,
+      feesCanteen: data.feesCanteen ?? null,
+      feesStatus: data.feesStatus ?? null,
+      feesLastPaid: data.feesLastPaid ?? null
+    };
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new FirebaseStorage();
