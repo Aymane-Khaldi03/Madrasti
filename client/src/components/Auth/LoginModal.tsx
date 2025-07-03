@@ -27,9 +27,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, selectedRole, 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[DEBUG] handleSubmit called');
     setLoading(true);
 
     try {
+      console.log('[DEBUG] About to call signIn');
       await signIn(email, password);
       toast({
         title: t('common.success'),

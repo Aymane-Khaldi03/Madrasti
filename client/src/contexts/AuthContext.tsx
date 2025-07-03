@@ -1,20 +1,22 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged, signInWithEmailAndPassword, signOut as firebaseSignOut } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
+import React, { createContext, useContext, useState } from 'react';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
+console.log('[DEBUG] Firestore db:', db);
 
 interface AuthUser {
-  uid: string;
+  id: string;
   email: string;
   name: string;
   role: 'student' | 'professor' | 'admin';
+  // Ajoute d'autres champs si besoin
 }
 
 interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,56 +31,62 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
-      console.log('onAuthStateChanged:', firebaseUser);
-      if (firebaseUser) {
-        try {
-          const userRef = doc(db, 'users', firebaseUser.uid);
-          const userDoc = await getDoc(userRef);
-          console.log('Firestore userDoc.exists:', userDoc.exists(), 'userDoc.data:', userDoc.data());
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setUser({
-              uid: firebaseUser.uid,
-              email: firebaseUser.email || '',
-              name: userData.name || '',
-              role: userData.role || 'student',
-            });
-          } else {
-            // Création du document utilisateur avec le rôle par défaut
-            const defaultUser = {
-              uid: firebaseUser.uid,
-              email: firebaseUser.email || '',
-              name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
-              role: 'student' as 'student',
-              createdAt: new Date(),
-            };
-            await setDoc(userRef, defaultUser);
-            setUser(defaultUser);
-            console.log('Created new user in Firestore:', defaultUser);
-          }
-        } catch (err) {
-          console.error('Firestore error:', err);
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    setLoading(true);
+    try {
+      // Test Firestore connection
+      try {
+        const test = await getDocs(collection(db, 'users'));
+        console.log('[DEBUG] Firestore test, user count:', test.size);
+      } catch (err) {
+        console.error('[DEBUG] Firestore test error:', err);
+      }
+
+      // Log tous les utilisateurs pour debug
+      const allUsers = await getDocs(collection(db, 'users'));
+      allUsers.forEach(doc => {
+        console.log('[DEBUG] User in DB:', doc.id, doc.data());
+      });
+
+      // Teste la requête uniquement sur l'email
+      const qEmail = query(
+        collection(db, 'users'),
+        where('email', '==', email)
+      );
+      const emailSnapshot = await getDocs(qEmail);
+      console.log('[DEBUG] Query by email only, empty:', emailSnapshot.empty);
+      if (!emailSnapshot.empty) {
+        emailSnapshot.forEach(doc => {
+          console.log('[DEBUG] User found by email:', doc.id, doc.data());
+        });
+      }
+
+      // Requête email + password
+      console.log('[DEBUG] Attempting login with:', { email, password });
+      const q = query(
+        collection(db, 'users'),
+        where('email', '==', email),
+        where('password', '==', password)
+      );
+      const querySnapshot = await getDocs(q);
+      console.log('[DEBUG] Firestore querySnapshot.empty:', querySnapshot.empty);
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        console.log('[DEBUG] User found:', userDoc.data());
+        setUser({ id: userDoc.id, ...userDoc.data() } as AuthUser);
+      } else {
+        console.log('[DEBUG] No user found for these credentials');
+        throw new Error('Invalid credentials');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const signOut = async () => {
-    await firebaseSignOut(auth);
+  const signOut = () => {
+    setUser(null);
   };
 
   const value = {

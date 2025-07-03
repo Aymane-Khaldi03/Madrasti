@@ -128,7 +128,7 @@ const Sidebar: React.FC = () => {
         <div className="flex items-center space-x-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback className={cn("text-white", getRoleColor(user.role))}>
-              {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+              {user.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : ''}
             </AvatarFallback>
           </Avatar>
           <div>

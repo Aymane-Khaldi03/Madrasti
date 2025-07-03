@@ -79,7 +79,7 @@ const Header: React.FC = () => {
                   <Button variant="ghost" className="flex items-center space-x-2">
                     <Avatar className="h-8 w-8">
                       <AvatarFallback className="bg-primary text-white">
-                        {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                        {user.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : ''}
                       </AvatarFallback>
                     </Avatar>
                     <span>{user.name}</span>
