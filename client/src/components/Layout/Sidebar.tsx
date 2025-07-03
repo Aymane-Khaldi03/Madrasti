@@ -69,7 +69,7 @@ const Sidebar: React.FC = () => {
       roles: ['admin'],
     },
     {
-      href: `/${user.role}/course-management`,
+      href: `/admin/courses`,
       icon: <BookOpen className="h-4 w-4" />,
       label: t('admin.courseManagement'),
       roles: ['admin'],

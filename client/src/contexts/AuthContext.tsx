@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -32,6 +32,14 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Hydrate user depuis localStorage au démarrage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('authUser');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
@@ -75,7 +83,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
         console.log('[DEBUG] User found:', userDoc.data());
-        setUser({ id: userDoc.id, ...userDoc.data() } as AuthUser);
+        const authUser = { id: userDoc.id, ...userDoc.data() } as AuthUser;
+        setUser(authUser);
+        localStorage.setItem('authUser', JSON.stringify(authUser)); // persiste l'utilisateur
       } else {
         console.log('[DEBUG] No user found for these credentials');
         throw new Error('Invalid credentials');
@@ -87,6 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = () => {
     setUser(null);
+    localStorage.removeItem('authUser'); // supprime du localStorage
   };
 
   const value = {

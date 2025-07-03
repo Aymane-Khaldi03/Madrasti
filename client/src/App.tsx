@@ -12,9 +12,16 @@ import ProtectedRoute from "@/components/Auth/ProtectedRoute";
 import LandingPage from "@/pages/LandingPage";
 import StudentDashboard from "@/pages/StudentDashboard";
 import ProfessorDashboard from "@/pages/ProfessorDashboard";
-import AdminDashboard from "@/pages/AdminDashboard";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
 import NotFound from "@/pages/not-found";
 import { useAuth } from "@/contexts/AuthContext";
+import UsersPage from "@/pages/admin/users";
+import CoursesPage from "@/pages/admin/courses";
+import AnalyticsPage from "@/pages/admin/analytics";
+import ReportsPage from "@/pages/admin/reports";
+import AnnouncementsPage from "@/pages/admin/announcements";
+import CalendarPage from "@/pages/admin/calendar";
+import NotificationsPage from "@/pages/admin/notifications";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -54,6 +61,55 @@ function Router() {
         <ProtectedRoute requiredRole="admin">
           <DashboardLayout>
             <AdminDashboard />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/users">
+        <ProtectedRoute requiredRole="admin">
+          <DashboardLayout>
+            <UsersPage />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/courses">
+        <ProtectedRoute requiredRole="admin">
+          <DashboardLayout>
+            <CoursesPage />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/analytics">
+        <ProtectedRoute requiredRole="admin">
+          <DashboardLayout>
+            <AnalyticsPage />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/reports">
+        <ProtectedRoute requiredRole="admin">
+          <DashboardLayout>
+            <ReportsPage />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/announcements">
+        <ProtectedRoute requiredRole="admin">
+          <DashboardLayout>
+            <AnnouncementsPage />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/calendar">
+        <ProtectedRoute requiredRole="admin">
+          <DashboardLayout>
+            <CalendarPage />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/notifications">
+        <ProtectedRoute requiredRole="admin">
+          <DashboardLayout>
+            <NotificationsPage />
           </DashboardLayout>
         </ProtectedRoute>
       </Route>

@@ -2,6 +2,7 @@
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import * as dotenv from 'dotenv';
+import { Request, Response, NextFunction } from 'express';
 
 dotenv.config(); // loads .env
 
@@ -28,3 +29,13 @@ if (!getApps().length) {
 
 /** Export Firestore instance */
 export const db = getFirestore();
+
+export function checkAdminAuth(req: Request, res: Response, next: NextFunction) {
+  // Exemple : on suppose que req.user est déjà peuplé par un middleware d'auth
+  // et contient un champ 'role'. À adapter selon ton système d'authentification !
+  const user = (req as any).user;
+  if (!user || user.role !== 'admin') {
+    return res.status(403).json({ message: 'Accès réservé aux administrateurs.' });
+  }
+  next();
+}

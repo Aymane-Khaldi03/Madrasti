@@ -1,6 +1,39 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser
+} from './controllers/admin/usersController';
+import {
+  getCourses,
+  createCourse,
+  updateCourse,
+  deleteCourse
+} from './controllers/admin/coursesController';
+import {
+  getAnnouncements,
+  createAnnouncement,
+  updateAnnouncement,
+  deleteAnnouncement
+} from './controllers/admin/announcementsController';
+import {
+  getReportByUser,
+  getReportByClass,
+  exportReports
+} from './controllers/admin/reportsController';
+import {
+  getEvents,
+  createEvent,
+  deleteEvent
+} from './controllers/admin/calendarController';
+import {
+  getNotifications,
+  createNotification
+} from './controllers/admin/notificationsController';
+import { checkAdminAuth } from './firebase-admin';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -228,6 +261,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to create notification" });
     }
   });
+
+  // --- ADMIN ROUTES ---
+  // Users
+  app.get('/admin/users', checkAdminAuth, getUsers);
+  app.post('/admin/users', checkAdminAuth, createUser);
+  app.put('/admin/users/:id', checkAdminAuth, updateUser);
+  app.delete('/admin/users/:id', checkAdminAuth, deleteUser);
+
+  // Courses
+  app.get('/admin/courses', checkAdminAuth, getCourses);
+  app.post('/admin/courses', checkAdminAuth, createCourse);
+  app.put('/admin/courses/:id', checkAdminAuth, updateCourse);
+  app.delete('/admin/courses/:id', checkAdminAuth, deleteCourse);
+
+  // Announcements
+  app.get('/admin/announcements', checkAdminAuth, getAnnouncements);
+  app.post('/admin/announcements', checkAdminAuth, createAnnouncement);
+  app.put('/admin/announcements/:id', checkAdminAuth, updateAnnouncement);
+  app.delete('/admin/announcements/:id', checkAdminAuth, deleteAnnouncement);
+
+  // Reports
+  app.get('/admin/reports/by-user/:id', checkAdminAuth, getReportByUser);
+  app.get('/admin/reports/by-class/:id', checkAdminAuth, getReportByClass);
+  app.get('/admin/reports/export', checkAdminAuth, exportReports);
+
+  // Calendar
+  app.get('/admin/events', checkAdminAuth, getEvents);
+  app.post('/admin/events', checkAdminAuth, createEvent);
+  app.delete('/admin/events/:id', checkAdminAuth, deleteEvent);
+
+  // Notifications
+  app.get('/admin/notifications', checkAdminAuth, getNotifications);
+  app.post('/admin/notifications', checkAdminAuth, createNotification);
 
   const httpServer = createServer(app);
   return httpServer;
