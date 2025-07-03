@@ -1,0 +1,130 @@
+Replit AI, please read carefully and generate the complete MVP blueprint for EduSphere (also known as Madrasti).
+Preserve all existing features exactly as-is (role-based dashboards, multilingual interface, dark/light theme, Firebase backend), and extend the project with the following Morocco-specific modules, fields, and logic.
+Student management and editing functionality must be strictly accessible to the Administration role only.
+
+🇲🇦 Moroccan National Student Profile (Admin Only Access)
+Add the following fields to student records (editable only by admins):
+
+massarId (10-char unique identifier)
+
+cne, apogee
+
+arabicName, latinName
+
+cin, cinIssuePlace, cinIssueDate
+
+wilaya, province, communeOfBirth
+
+academicCycle (Primary, Collège, Lycée)
+
+track (e.g. science, literary, technical)
+
+boursier (true/false) + scholarship amount
+
+🧮 Grading & Exam Modules (0–20 Moroccan System)
+Implement a grading system that includes:
+
+Subject coefficients stored per academic cycle (e.g., Math × 7, Arabic × 4).
+
+Term averages (Semestre 1 & 2 for Collège/Lycée; Trimestres 1–3 for Primary).
+
+Moyenne Générale with ranking by class.
+
+Regional Exam (grade + session: June/Retake).
+
+National Exam (grade + session). Final Bac score = 25% regional + 75% national.
+
+Bulletin PDF generator (bilingual Arabic/French, Moroccan template).
+
+Redoublement flag with repeat count.
+
+📆 Attendance & Conduct
+Admin can:
+
+Track justified/unjustified absences (reason, date).
+
+Count late arrivals and flag after 3+ occurrences.
+
+Assign conduct grade (note_conduite) and log incidents:
+
+Incident type, decision, date
+
+Generate and store disciplinary convocation letters (PDF)
+
+📚 Curriculum & Timetabling
+Weekly schedule must respect Moroccan hours:
+
+Morning: 08:00–12:00, Afternoon: 14:00–18:00 (Friday ends 17:00)
+
+Religious education inserted into the timetable by default.
+
+Vacation Calendar Loader: predefined holidays (Aïd, Achoura, spring, winter…).
+
+🏛 Administration Dashboard Enhancements
+Admins can:
+
+View KPIs: Bac pass %, redoublement rate, scholarship spending
+
+Export orientation forms (CSV for ParcoursUP, ONOUSC)
+
+Generate Ministry-compatible exports (students, grades, absences in XML/CSV)
+
+Manage fees: insurance, coopérative scolaire, canteen
+
+📞 Guardian Communication
+Store guardian name in Arabic + relationship (أب / أم / ولي أمر)
+
+Configure SMS gateway short codes (Inwi, Orange, IAM)
+
+Auto-generate PDF convocations for disciplinary actions
+
+⚙ Default Moroccan Settings Panel
+Grade scale: 0–20 (editable; locked for Bac)
+
+Academic year: 1 Sep – 30 Jun
+
+Weekend: Sat & Sun (public) or Fri & Sun (private)
+
+Currency: MAD (د.م)
+
+🗂 Firebase Firestore Schema Enhancements
+students collection includes all new fields
+
+subjectCoefficients collection keyed by cycle_level
+
+Sub-collections:
+
+examResults under each student (regional, national, bacFinal)
+
+discipline/incidents (type, decision, convocationURL)
+
+PDFs stored in bulletins/{year}/{classId}/{massarId}.pdf
+
+🤖 Cloud Function Automations
+Trigger	Action
+New unjustified absence	Auto-SMS to guardian with subject/date
+Term grades finalized	Auto-generate bulletin PDF, email link to guardian
+Fees overdue > 30 days	Flag student + email reminder to guardian
+
+🧩 Deliverables Required
+Updated Firestore schema (ERD) with all added fields/collections
+
+React component stubs for:
+
+Student form (with Moroccan fields, admin only)
+
+Grade entry with coefficients
+
+Absence logging & incident reports
+
+PDF bulletin generator
+
+Routing additions: for all new admin tabs/pages
+
+Sample data seeds (10 students per cycle with realistic Moroccan info)
+
+Cloud Functions skeletons for automation logic
+
+PDF Templates: official Moroccan layout for bulletins and convocations (bilingual)
+
+📝 End of prompt. Generate the updated project structure, Firestore rules, React components, and Firebase config needed to fully support these Moroccan-specific features on top of the existing EduSphere (Madrasti) MVP. All student management features should remain exclusive to the Administrator role.

@@ -1,8 +1,8 @@
-# EduSphere - School Data Management Platform
+# EduSphere (Madrasti) - Moroccan School Data Management Platform
 
 ## Overview
 
-EduSphere is a modern, multilingual school data management platform designed to streamline education administration. The application serves three distinct user roles (Student, Professor, and Administration) with role-based dashboards and features. Built with a React frontend and Express backend, it combines Firebase Authentication with a PostgreSQL database via Drizzle ORM.
+EduSphere (also known as Madrasti) is a comprehensive, multilingual school data management platform specifically designed for the Moroccan education system. The application integrates traditional school management features with Morocco-specific requirements including MASSAR ID management, 0-20 grading system, regional/national exam tracking, and Ministry of Education export formats. Built with a React frontend and Express backend, it combines Firebase Authentication with a PostgreSQL database via Drizzle ORM.
 
 ## System Architecture
 
@@ -112,7 +112,78 @@ EduSphere is a modern, multilingual school data management platform designed to 
 
 Preferred communication style: Simple, everyday language.
 
+## 🇲🇦 Moroccan Education System Features
+
+### Student Profile Management (Admin Only Access)
+- **MASSAR ID**: 10-character unique identifier for each student
+- **National Identifiers**: CNE, APOGEE, CIN with issue details
+- **Bilingual Names**: Arabic and Latin character support
+- **Geographic Data**: Wilaya, Province, Commune of birth tracking
+- **Academic Tracking**: Cycle (Primary/Collège/Lycée), Track specialization
+- **Financial Aid**: Scholarship status and amount tracking
+- **Academic History**: Redoublement flag and repeat count
+
+### Grading System (0-20 Scale)
+- **Subject Coefficients**: Configurable by academic cycle
+- **Term Structure**: Semestre/Trimestre based on cycle
+- **Exam Integration**: Regional and National Bac exam tracking
+- **Final Calculations**: 25% regional + 75% national for Bac
+- **Conduct Grades**: Note de conduite (0-20 scale)
+- **Ranking System**: Class ranking by Moyenne Générale
+
+### Attendance & Discipline Management
+- **Absence Tracking**: Justified/unjustified with documentation
+- **Late Arrivals**: Automatic parent notification after 3+ occurrences
+- **Disciplinary Actions**: Incident logging with convocation generation
+- **Guardian Communication**: SMS integration with Moroccan carriers
+
+### Schedule & Calendar System
+- **Moroccan Hours**: 08:00-12:00, 14:00-18:00 (Friday ends 17:00)
+- **Religious Education**: Auto-integrated into timetables
+- **Holiday Calendar**: Aïd, Achoura, spring/winter breaks
+- **Weekend Configuration**: Saturday/Sunday (public) or Friday/Sunday (private)
+
+### Administration Features
+- **KPI Dashboard**: Bac pass rate, redoublement rate, scholarship spending
+- **Ministry Exports**: XML/CSV formats compatible with MEN requirements
+- **University Orientation**: ParcoursUP and ONOUSC export formats
+- **Fee Management**: Insurance, cooperative, canteen fee tracking
+- **Guardian Data**: Arabic names, relationship, phone numbers
+
+### System Settings
+- **Academic Year**: September 1 - June 30 structure
+- **Currency**: MAD (درهم مغربي) with proper formatting
+- **SMS Gateway**: Integration with Inwi, Orange, IAM providers
+- **Grade Scale**: Locked 0-20 system for Bac compliance
+- **Language Support**: Arabic RTL, French, English interfaces
+
+## Database Schema Extensions
+
+### New Tables Added
+- `subject_coefficients`: Coefficient values by academic cycle
+- `grades`: 0-20 grading system with coefficients
+- `exam_results`: Regional/National exam tracking
+- `attendance`: Absence and lateness logging
+- `disciplinary_incidents`: Conduct and incident management
+- `academic_calendar`: Moroccan holiday and term calendar
+- `class_schedules`: Time-specific scheduling
+- `system_settings`: Moroccan education configuration
+
+### Enhanced User Table
+Extended with 25+ Morocco-specific fields including MASSAR ID, CNE, guardianship information, fees tracking, and conduct grades.
+
 ## Changelog
 
 Changelog:
-- July 03, 2025. Initial setup
+- July 03, 2025: Complete Moroccan education system implementation
+  ✓ MASSAR ID and national student profile system
+  ✓ 0-20 grading system with subject coefficients
+  ✓ Regional/National Bac exam tracking
+  ✓ Moroccan schedule and holiday calendar
+  ✓ Ministry export formats (XML/CSV)
+  ✓ Guardian communication system
+  ✓ Comprehensive admin dashboard with KPIs
+  ✓ Bilingual forms (Arabic/French/English)
+  ✓ Fee management and scholarship tracking
+- July 03, 2025: Enhanced landing page with royal blue theme
+- July 03, 2025: Initial setup
