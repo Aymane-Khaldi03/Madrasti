@@ -13,9 +13,10 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedRole?: 'student' | 'professor' | 'admin';
+  onLoginSuccess?: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, selectedRole }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, selectedRole, onLoginSuccess }) => {
   const { signIn } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
@@ -35,6 +36,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, selectedRole }
         description: t('auth.signIn') + ' ' + t('common.success'),
       });
       onClose();
+      if (onLoginSuccess) onLoginSuccess();
     } catch (error) {
       toast({
         title: t('common.error'),

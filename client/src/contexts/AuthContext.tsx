@@ -33,28 +33,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
+      console.log('onAuthStateChanged:', firebaseUser);
       if (firebaseUser) {
-        // Get user data from Firestore
-        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUser({
-            uid: firebaseUser.uid,
-            email: firebaseUser.email || '',
-            name: userData.name || '',
-            role: userData.role || 'student',
-          });
-        } else {
-          // Create default user document if it doesn't exist
-          const defaultUser = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email || '',
-            name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
-            role: 'student' as const,
-            createdAt: new Date(),
-          };
-          await setDoc(doc(db, 'users', firebaseUser.uid), defaultUser);
-          setUser(defaultUser);
+        try {
+          const userRef = doc(db, 'users', firebaseUser.uid);
+          const userDoc = await getDoc(userRef);
+          console.log('Firestore userDoc.exists:', userDoc.exists(), 'userDoc.data:', userDoc.data());
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email || '',
+              name: userData.name || '',
+              role: userData.role || 'student',
+            });
+          } else {
+            // Création du document utilisateur avec le rôle par défaut
+            const defaultUser = {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email || '',
+              name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
+              role: 'student' as 'student',
+              createdAt: new Date(),
+            };
+            await setDoc(userRef, defaultUser);
+            setUser(defaultUser);
+            console.log('Created new user in Firestore:', defaultUser);
+          }
+        } catch (err) {
+          console.error('Firestore error:', err);
+          setUser(null);
         }
       } else {
         setUser(null);

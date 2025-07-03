@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -40,10 +40,14 @@ export default function LandingPage() {
 
   const handleLoginSuccess = () => {
     setIsLoginOpen(false);
-    if (user) {
-      navigate(`/dashboard/${user.role}`);
-    }
   };
+
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      navigate(`/${user.role}`);
+    }
+  }, [user]);
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
@@ -385,6 +389,7 @@ export default function LandingPage() {
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
         selectedRole={selectedRole}
+        onLoginSuccess={handleLoginSuccess}
       />
     </div>
   );
