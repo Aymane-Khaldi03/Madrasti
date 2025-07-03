@@ -8,6 +8,7 @@ export const translations: Record<string, Translations> = {
   en: {
     common: {
       welcome: "Welcome to EduSphere",
+      tagline: "Modern School Management",
       login: "Login",
       logout: "Logout",
       loading: "Loading...",
@@ -26,7 +27,74 @@ export const translations: Record<string, Translations> = {
       settings: "Settings",
       notifications: "Notifications",
       calendar: "Calendar",
-      search: "Search",
+      search: "Search"
+    },
+    navigation: {
+      home: "Home",
+      dashboard: "Dashboard",
+      courses: "Courses",
+      assignments: "Assignments",
+      grades: "Grades",
+      calendar: "Calendar",
+      reports: "Reports",
+      users: "Users",
+      settings: "Settings",
+      features: "Features",
+      roles: "Roles"
+    },
+    hero: {
+      description: "A comprehensive school data management platform designed to streamline education administration, enhance learning experiences, and foster academic excellence.",
+      getStarted: "Get Started",
+      learnMore: "Learn More"
+    },
+    features: {
+      title: "Platform Features",
+      description: "Discover powerful tools designed to enhance your educational experience",
+      modernInterface: "Modern Interface",
+      modernInterfaceDesc: "Clean, responsive design that works seamlessly on all devices",
+      roleBasedAccess: "Role-Based Access",
+      roleBasedAccessDesc: "Tailored experiences for students, professors, and administrators",
+      courseManagement: "Course Management",
+      courseManagementDesc: "Complete solution for academic course administration",
+      analytics: "Advanced Analytics",
+      analyticsDesc: "Real-time insights and comprehensive reporting tools",
+      scheduling: "Smart Scheduling",
+      schedulingDesc: "Intelligent scheduling system for classes and resources",
+      assessment: "Assessment Tools",
+      assessmentDesc: "Comprehensive assessment and grading capabilities"
+    },
+    roles: {
+      student: "Student",
+      professor: "Professor",
+      admin: "Administrator",
+      chooseRole: "Choose Your Role",
+      chooseRoleDescription: "Select your role to access your personalized dashboard and features",
+      loginAs: "Login as",
+      roleDescription: "Select your role to access your personalized dashboard",
+      studentDesc: "Access courses, assignments, and track your academic progress",
+      professorDesc: "Manage courses, assess students, and share educational resources",
+      adminDesc: "Oversee platform operations, manage users, and generate reports",
+      features: {
+        accessCourses: "Access enrolled courses",
+        submitAssignments: "Submit assignments online",
+        trackProgress: "Track academic progress",
+        manageCourses: "Manage course content",
+        gradeAssignments: "Grade and assess students",
+        trackStudents: "Monitor student progress",
+        manageUsers: "Manage platform users",
+        systemOverview: "System-wide analytics",
+        generateReports: "Generate detailed reports"
+      }
+    },
+    stats: {
+      students: "Active Students",
+      courses: "Available Courses",
+      professors: "Expert Professors",
+      satisfaction: "User Satisfaction"
+    },
+    footer: {
+      description: "Empowering education through innovative technology and seamless management solutions.",
+      copyright: "All rights reserved. Modern School Management Platform"
     },
     auth: {
       signIn: "Sign In",
@@ -36,76 +104,133 @@ export const translations: Record<string, Translations> = {
       rememberMe: "Remember me",
       forgotPassword: "Forgot password?",
       loginFailed: "Login failed. Please check your credentials.",
-    },
-    roles: {
-      student: "Student",
-      professor: "Professor",
-      admin: "Administrator",
-      chooseRole: "Choose Your Role",
-      loginAs: "Login as",
+      login: "Login",
+      register: "Register"
     },
     student: {
       dashboard: "Student Dashboard",
       myCourses: "My Courses",
       assignments: "Assignments",
       grades: "Grades",
-      enrolledCourses: "Enrolled Courses",
-      completedAssignments: "Completed Assignments",
-      pendingAssignments: "Pending Assignments",
-      averageGrade: "Average Grade",
-      recentAssignments: "Recent Assignments",
+      schedule: "Schedule",
+      resources: "Resources",
+      announcements: "Announcements"
     },
     professor: {
       dashboard: "Professor Dashboard",
       myCourses: "My Courses",
-      courseManagement: "Course Management",
       students: "Students",
-      activeCourses: "Active Courses",
-      totalStudents: "Total Students",
-      pendingReviews: "Pending Reviews",
-      classAverage: "Class Average",
-      addCourse: "Add Course",
-      recentSubmissions: "Recent Submissions",
+      assignments: "Assignments",
+      gradebook: "Gradebook",
+      attendance: "Attendance",
+      schedule: "Teaching Schedule",
+      resources: "Course Resources",
+      announcements: "Announcements",
+      courseManagement: "Course Management"
     },
     admin: {
-      dashboard: "Admin Dashboard",
+      dashboard: "Administrator Dashboard",
       userManagement: "User Management",
       courseManagement: "Course Management",
+      systemReports: "System Reports",
       analytics: "Analytics",
-      reports: "Reports",
-      announcements: "Announcements",
-      totalUsers: "Total Users",
-      activeCourses: "Active Courses",
-      graduationRate: "Graduation Rate",
-      platformUsage: "Platform Usage",
-      addUser: "Add User",
-      recentUsers: "Recent Users",
-      systemAnalytics: "System Analytics",
-      exportReport: "Export Report",
-    },
+      settings: "System Settings",
+      backup: "Backup",
+      maintenance: "Maintenance",
+      audit: "Audit Logs",
+      statistics: "Statistics"
+    }
   },
   ar: {
     common: {
-      welcome: "أهلاً بك في إيديوسفير",
+      welcome: "مرحباً بكم في إيدوسفير",
+      tagline: "إدارة مدرسية حديثة",
       login: "تسجيل الدخول",
       logout: "تسجيل الخروج",
-      loading: "جاري التحميل...",
+      loading: "جارٍ التحميل...",
       error: "خطأ",
       success: "نجح",
       save: "حفظ",
       cancel: "إلغاء",
-      edit: "تحرير",
+      edit: "تعديل",
       delete: "حذف",
       add: "إضافة",
       view: "عرض",
       upload: "رفع",
       download: "تحميل",
-      dashboard: "لوحة التحكم",
+      dashboard: "لوحة القيادة",
       profile: "الملف الشخصي",
       settings: "الإعدادات",
       notifications: "الإشعارات",
       calendar: "التقويم",
-      search: "بحث",
+      search: "بحث"
+    },
+    navigation: {
+      home: "الرئيسية",
+      dashboard: "لوحة القيادة",
+      courses: "المقررات",
+      assignments: "المهام",
+      grades: "الدرجات",
+      calendar: "التقويم",
+      reports: "التقارير",
+      users: "المستخدمون",
+      settings: "الإعدادات",
+      features: "الميزات",
+      roles: "الأدوار"
+    },
+    hero: {
+      description: "منصة إدارة بيانات مدرسية شاملة مصممة لتبسيط الإدارة التعليمية وتعزيز تجارب التعلم وتشجيع التميز الأكاديمي.",
+      getStarted: "ابدأ الآن",
+      learnMore: "تعرف على المزيد"
+    },
+    features: {
+      title: "ميزات المنصة",
+      description: "اكتشف أدوات قوية مصممة لتعزيز تجربتك التعليمية",
+      modernInterface: "واجهة حديثة",
+      modernInterfaceDesc: "تصميم نظيف ومتجاوب يعمل بسلاسة على جميع الأجهزة",
+      roleBasedAccess: "وصول قائم على الأدوار",
+      roleBasedAccessDesc: "تجارب مخصصة للطلاب والأساتذة والإداريين",
+      courseManagement: "إدارة المقررات",
+      courseManagementDesc: "حل شامل لإدارة المقررات الأكاديمية",
+      analytics: "تحليلات متقدمة",
+      analyticsDesc: "رؤى فورية وأدوات تقارير شاملة",
+      scheduling: "جدولة ذكية",
+      schedulingDesc: "نظام جدولة ذكي للفصول والموارد",
+      assessment: "أدوات التقييم",
+      assessmentDesc: "قدرات تقييم ودرجات شاملة"
+    },
+    roles: {
+      student: "طالب",
+      professor: "أستاذ",
+      admin: "مدير",
+      chooseRole: "اختر دورك",
+      chooseRoleDescription: "اختر دورك للوصول إلى لوحة القيادة والميزات المخصصة لك",
+      loginAs: "تسجيل الدخول كـ",
+      roleDescription: "اختر دورك للوصول إلى لوحة القيادة المخصصة لك",
+      studentDesc: "الوصول إلى المقررات والمهام وتتبع التقدم الأكاديمي",
+      professorDesc: "إدارة المقررات وتقييم الطلاب ومشاركة الموارد التعليمية",
+      adminDesc: "الإشراف على عمليات المنصة وإدارة المستخدمين وإنشاء التقارير",
+      features: {
+        accessCourses: "الوصول إلى المقررات المسجلة",
+        submitAssignments: "تقديم المهام عبر الإنترنت",
+        trackProgress: "تتبع التقدم الأكاديمي",
+        manageCourses: "إدارة محتوى المقرر",
+        gradeAssignments: "تقييم ودرجات الطلاب",
+        trackStudents: "مراقبة تقدم الطلاب",
+        manageUsers: "إدارة مستخدمي المنصة",
+        systemOverview: "تحليلات على مستوى النظام",
+        generateReports: "إنشاء تقارير مفصلة"
+      }
+    },
+    stats: {
+      students: "الطلاب النشطون",
+      courses: "المقررات المتاحة",
+      professors: "الأساتذة الخبراء",
+      satisfaction: "رضا المستخدمين"
+    },
+    footer: {
+      description: "تمكين التعليم من خلال التكنولوجيا المبتكرة وحلول الإدارة السلسة.",
+      copyright: "جميع الحقوق محفوظة. منصة إدارة مدرسية حديثة"
     },
     auth: {
       signIn: "تسجيل الدخول",
@@ -114,58 +239,48 @@ export const translations: Record<string, Translations> = {
       password: "كلمة المرور",
       rememberMe: "تذكرني",
       forgotPassword: "نسيت كلمة المرور؟",
-      loginFailed: "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد.",
-    },
-    roles: {
-      student: "طالب",
-      professor: "أستاذ",
-      admin: "مدير",
-      chooseRole: "اختر دورك",
-      loginAs: "تسجيل الدخول كـ",
+      loginFailed: "فشل تسجيل الدخول. يرجى التحقق من بياناتك.",
+      login: "تسجيل الدخول",
+      register: "التسجيل"
     },
     student: {
-      dashboard: "لوحة تحكم الطالب",
+      dashboard: "لوحة قيادة الطالب",
       myCourses: "مقرراتي",
-      assignments: "الواجبات",
+      assignments: "المهام",
       grades: "الدرجات",
-      enrolledCourses: "المقررات المسجلة",
-      completedAssignments: "الواجبات المكتملة",
-      pendingAssignments: "الواجبات المعلقة",
-      averageGrade: "المعدل",
-      recentAssignments: "الواجبات الأخيرة",
+      schedule: "الجدول",
+      resources: "الموارد",
+      announcements: "الإعلانات"
     },
     professor: {
-      dashboard: "لوحة تحكم الأستاذ",
+      dashboard: "لوحة قيادة الأستاذ",
       myCourses: "مقرراتي",
-      courseManagement: "إدارة المقررات",
       students: "الطلاب",
-      activeCourses: "المقررات النشطة",
-      totalStudents: "إجمالي الطلاب",
-      pendingReviews: "المراجعات المعلقة",
-      classAverage: "معدل الفصل",
-      addCourse: "إضافة مقرر",
-      recentSubmissions: "الواجبات الأخيرة",
+      assignments: "المهام",
+      gradebook: "دفتر الدرجات",
+      attendance: "الحضور",
+      schedule: "جدول التدريس",
+      resources: "موارد المقرر",
+      announcements: "الإعلانات",
+      courseManagement: "إدارة المقررات"
     },
     admin: {
-      dashboard: "لوحة تحكم المدير",
+      dashboard: "لوحة قيادة المدير",
       userManagement: "إدارة المستخدمين",
       courseManagement: "إدارة المقررات",
+      systemReports: "تقارير النظام",
       analytics: "التحليلات",
-      reports: "التقارير",
-      announcements: "الإعلانات",
-      totalUsers: "إجمالي المستخدمين",
-      activeCourses: "المقررات النشطة",
-      graduationRate: "معدل التخرج",
-      platformUsage: "استخدام المنصة",
-      addUser: "إضافة مستخدم",
-      recentUsers: "المستخدمون الجدد",
-      systemAnalytics: "تحليلات النظام",
-      exportReport: "تصدير التقرير",
-    },
+      settings: "إعدادات النظام",
+      backup: "النسخ الاحتياطي",
+      maintenance: "الصيانة",
+      audit: "سجلات التدقيق",
+      statistics: "الإحصائيات"
+    }
   },
   fr: {
     common: {
-      welcome: "Bienvenue à EduSphere",
+      welcome: "Bienvenue sur EduSphere",
+      tagline: "Gestion Scolaire Moderne",
       login: "Connexion",
       logout: "Déconnexion",
       loading: "Chargement...",
@@ -184,74 +299,132 @@ export const translations: Record<string, Translations> = {
       settings: "Paramètres",
       notifications: "Notifications",
       calendar: "Calendrier",
-      search: "Rechercher",
+      search: "Rechercher"
     },
-    auth: {
-      signIn: "Se connecter",
-      signOut: "Se déconnecter",
-      email: "Adresse e-mail",
-      password: "Mot de passe",
-      rememberMe: "Se souvenir de moi",
-      forgotPassword: "Mot de passe oublié ?",
-      loginFailed: "Échec de la connexion. Veuillez vérifier vos identifiants.",
+    navigation: {
+      home: "Accueil",
+      dashboard: "Tableau de bord",
+      courses: "Cours",
+      assignments: "Devoirs",
+      grades: "Notes",
+      calendar: "Calendrier",
+      reports: "Rapports",
+      users: "Utilisateurs",
+      settings: "Paramètres",
+      features: "Fonctionnalités",
+      roles: "Rôles"
+    },
+    hero: {
+      description: "Une plateforme complète de gestion des données scolaires conçue pour rationaliser l'administration éducative, améliorer les expériences d'apprentissage et favoriser l'excellence académique.",
+      getStarted: "Commencer",
+      learnMore: "En savoir plus"
+    },
+    features: {
+      title: "Fonctionnalités de la Plateforme",
+      description: "Découvrez des outils puissants conçus pour améliorer votre expérience éducative",
+      modernInterface: "Interface Moderne",
+      modernInterfaceDesc: "Design propre et responsive qui fonctionne parfaitement sur tous les appareils",
+      roleBasedAccess: "Accès Basé sur les Rôles",
+      roleBasedAccessDesc: "Expériences personnalisées pour les étudiants, professeurs et administrateurs",
+      courseManagement: "Gestion des Cours",
+      courseManagementDesc: "Solution complète pour l'administration des cours académiques",
+      analytics: "Analyses Avancées",
+      analyticsDesc: "Insights en temps réel et outils de reporting complets",
+      scheduling: "Planification Intelligente",
+      schedulingDesc: "Système de planification intelligent pour les cours et ressources",
+      assessment: "Outils d'Évaluation",
+      assessmentDesc: "Capacités d'évaluation et de notation complètes"
     },
     roles: {
       student: "Étudiant",
       professor: "Professeur",
       admin: "Administrateur",
       chooseRole: "Choisissez votre rôle",
+      chooseRoleDescription: "Sélectionnez votre rôle pour accéder à votre tableau de bord et fonctionnalités personnalisés",
       loginAs: "Se connecter en tant que",
+      roleDescription: "Sélectionnez votre rôle pour accéder à votre tableau de bord personnalisé",
+      studentDesc: "Accéder aux cours, devoirs et suivre vos progrès académiques",
+      professorDesc: "Gérer les cours, évaluer les étudiants et partager les ressources éducatives",
+      adminDesc: "Superviser les opérations de la plateforme, gérer les utilisateurs et générer des rapports",
+      features: {
+        accessCourses: "Accéder aux cours inscrits",
+        submitAssignments: "Soumettre les devoirs en ligne",
+        trackProgress: "Suivre les progrès académiques",
+        manageCourses: "Gérer le contenu des cours",
+        gradeAssignments: "Noter et évaluer les étudiants",
+        trackStudents: "Surveiller les progrès des étudiants",
+        manageUsers: "Gérer les utilisateurs de la plateforme",
+        systemOverview: "Analyses à l'échelle du système",
+        generateReports: "Générer des rapports détaillés"
+      }
+    },
+    stats: {
+      students: "Étudiants Actifs",
+      courses: "Cours Disponibles",
+      professors: "Professeurs Experts",
+      satisfaction: "Satisfaction Utilisateur"
+    },
+    footer: {
+      description: "Autonomiser l'éducation grâce à la technologie innovante et aux solutions de gestion transparentes.",
+      copyright: "Tous droits réservés. Plateforme de Gestion Scolaire Moderne"
+    },
+    auth: {
+      signIn: "Se connecter",
+      signOut: "Se déconnecter",
+      email: "Adresse email",
+      password: "Mot de passe",
+      rememberMe: "Se souvenir de moi",
+      forgotPassword: "Mot de passe oublié?",
+      loginFailed: "Échec de la connexion. Veuillez vérifier vos identifiants.",
+      login: "Connexion",
+      register: "S'inscrire"
     },
     student: {
-      dashboard: "Tableau de bord étudiant",
-      myCourses: "Mes cours",
+      dashboard: "Tableau de bord Étudiant",
+      myCourses: "Mes Cours",
       assignments: "Devoirs",
       grades: "Notes",
-      enrolledCourses: "Cours inscrits",
-      completedAssignments: "Devoirs terminés",
-      pendingAssignments: "Devoirs en attente",
-      averageGrade: "Note moyenne",
-      recentAssignments: "Devoirs récents",
+      schedule: "Horaire",
+      resources: "Ressources",
+      announcements: "Annonces"
     },
     professor: {
-      dashboard: "Tableau de bord professeur",
-      myCourses: "Mes cours",
-      courseManagement: "Gestion des cours",
+      dashboard: "Tableau de bord Professeur",
+      myCourses: "Mes Cours",
       students: "Étudiants",
-      activeCourses: "Cours actifs",
-      totalStudents: "Total des étudiants",
-      pendingReviews: "Révisions en attente",
-      classAverage: "Moyenne de la classe",
-      addCourse: "Ajouter un cours",
-      recentSubmissions: "Soumissions récentes",
+      assignments: "Devoirs",
+      gradebook: "Carnet de Notes",
+      attendance: "Présence",
+      schedule: "Horaire d'Enseignement",
+      resources: "Ressources de Cours",
+      announcements: "Annonces",
+      courseManagement: "Gestion des Cours"
     },
     admin: {
-      dashboard: "Tableau de bord administrateur",
-      userManagement: "Gestion des utilisateurs",
-      courseManagement: "Gestion des cours",
+      dashboard: "Tableau de bord Administrateur",
+      userManagement: "Gestion des Utilisateurs",
+      courseManagement: "Gestion des Cours",
+      systemReports: "Rapports Système",
       analytics: "Analyses",
-      reports: "Rapports",
-      announcements: "Annonces",
-      totalUsers: "Total des utilisateurs",
-      activeCourses: "Cours actifs",
-      graduationRate: "Taux de diplomation",
-      platformUsage: "Utilisation de la plateforme",
-      addUser: "Ajouter un utilisateur",
-      recentUsers: "Utilisateurs récents",
-      systemAnalytics: "Analyses système",
-      exportReport: "Exporter le rapport",
-    },
-  },
+      settings: "Paramètres Système",
+      backup: "Sauvegarde",
+      maintenance: "Maintenance",
+      audit: "Journaux d'Audit",
+      statistics: "Statistiques"
+    }
+  }
 };
 
 export const LanguageContext = createContext<{
   language: string;
   setLanguage: (lang: string) => void;
   t: (key: string) => string;
-}>({
-  language: 'en',
-  setLanguage: () => {},
-  t: () => '',
-});
+} | null>(null);
 
-export const useLanguage = () => useContext(LanguageContext);
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+};
