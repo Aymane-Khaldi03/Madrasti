@@ -1,0 +1,94 @@
+Build a beautiful, modern, and modular web application called EduSphere — a School Data Management Platform supporting three roles: Student, Professor, and Administration.
+
+Each role should have its own login interface, dashboard, and personalized features, all wrapped in a professional, attractive, and responsive design.
+
+🎨 The UI must support Dark/Light Mode toggle and Multilingual Interface with Arabic, French, and English (with a language switcher).
+
+Use Firebase for backend services (Authentication, Firestore Database, Storage). Follow modern full-stack architecture best practices using React and Firebase.
+
+🔧 Core Functionalities
+🔐 Authentication
+Firebase Authentication (Email & Password login)
+
+Predefined users (no signup for MVP)
+
+Role-based access control: redirect to dashboards based on user role
+
+🖥️ Dashboards
+🎓 Student Dashboard:
+View enrolled courses
+
+View/download/upload assignments
+
+Track grades and feedback
+
+Calendar view (exam dates, assignment deadlines)
+
+Notifications (from professors/admin)
+
+👨‍🏫 Professor Dashboard:
+Manage owned courses (create/update/delete)
+
+Upload resources/assignments (to Firebase Storage)
+
+View student submissions and assign grades
+
+Send messages or feedback to students
+
+Calendar integration (course schedule, grading deadlines)
+
+🏫 Admin Dashboard:
+Manage users: add/remove/edit students and professors
+
+Assign professors to courses
+
+Manage all courses
+
+View platform statistics (students per course, pass rate, etc.)
+
+Export reports to PDF
+
+Broadcast announcements
+
+🌍 Language & Theme Support
+🔄 Multilingual support (Arabic - RTL, French, English)
+
+Language switcher stored in local/session storage
+
+All UI elements dynamically translate using i18n or similar library
+
+🌗 Dark / Light Mode toggle with saved preference
+
+📦 Tech Stack
+Frontend: React.js with Context API or Redux
+
+Styling: Tailwind CSS (or Material UI)
+
+Backend: Firebase (Authentication, Firestore, Storage, Functions)
+
+Routing: React Router DOM
+
+i18n: React-i18next or similar for translations
+
+🎯 MVP Deliverables
+Complete role-based authentication flow
+
+3 dashboards with core features
+
+Elegant and responsive UI
+
+Working Dark/Light Mode toggle
+
+Functional multilingual switch (Arabic, French, English)
+
+Firebase integration (CRUD operations, file storage, auth)
+
+Clean codebase ready for future scaling
+
+💡 Bonus (optional, but attractive for customers)
+Admin dashboard: export performance reports as PDF
+
+Notifications system via Firebase Cloud Messaging
+
+Progressive Web App (PWA) setup
+
