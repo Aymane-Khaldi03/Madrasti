@@ -117,11 +117,11 @@ const ReportsPage = () => {
               <option value="cycle">Par cycle</option>
             </select>
             <input type="text" placeholder="Filtrer..." className="input input-bordered rounded-full px-4 py-2" value={filterValue} onChange={e => setFilterValue(e.target.value)} />
-            <button className="btn btn-primary rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform" onClick={generateReports} aria-label="Générer les rapports">
+            <button className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 text-white shadow-lg backdrop-blur-md hover:from-blue-600 hover:to-indigo-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-300 outline-none" onClick={generateReports} aria-label="Générer les rapports">
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
               Générer
             </button>
-            <button className="btn btn-secondary rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform" onClick={exportCSV} disabled={reports.length === 0} aria-label="Exporter CSV">
+            <button className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-gray-400 via-blue-400 to-blue-600 text-white shadow-lg backdrop-blur-md hover:from-blue-500 hover:to-blue-700 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-300 outline-none disabled:opacity-60 disabled:cursor-not-allowed" onClick={exportCSV} disabled={reports.length === 0} aria-label="Exporter CSV">
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
               Exporter CSV
             </button>
@@ -145,10 +145,10 @@ const ReportsPage = () => {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
                 <thead>
                   <tr className="bg-blue-50 dark:bg-gray-800">
-                    <th className="px-4 py-2 text-left font-semibold">Type</th>
-                    <th className="px-4 py-2 text-left font-semibold">Détails</th>
-                    <th className="px-4 py-2 text-left font-semibold">Date</th>
-                    <th className="px-4 py-2 text-left font-semibold">Actions</th>
+                    <th className="px-6 py-2 text-left font-semibold">Type</th>
+                    <th className="px-6 py-2 text-left font-semibold">Détails</th>
+                    <th className="px-6 py-2 text-left font-semibold">Date</th>
+                    <th className="px-6 py-2 text-left font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -159,13 +159,13 @@ const ReportsPage = () => {
                   ) : (
                     paginatedReports.map((r, idx) => (
                       <tr key={r.id} className={`transition-colors ${idx % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'} hover:bg-blue-100 dark:hover:bg-blue-950`}>
-                        <td className="px-4 py-2">
+                        <td className="px-6 py-2">
                           <span className={`px-2 py-1 rounded-full text-xs font-bold ${r.type.includes('étudiant') ? 'bg-green-500 text-white' : r.type.includes('classe') ? 'bg-blue-500 text-white' : r.type.includes('matière') ? 'bg-purple-500 text-white' : 'bg-yellow-500 text-white'}`}>{r.type}</span>
                         </td>
-                        <td className="px-4 py-2 text-gray-600 dark:text-gray-300">{r.details}</td>
-                        <td className="px-4 py-2 text-gray-500 dark:text-gray-400">{r.date}</td>
-                        <td className="px-4 py-2 flex gap-2">
-                          <button className="btn btn-xs btn-primary rounded-full flex items-center gap-1 shadow hover:scale-105 transition-transform" onClick={() => openModal(r)} aria-label="Voir le rapport">
+                        <td className="px-6 py-2 text-gray-600 dark:text-gray-300">{r.details}</td>
+                        <td className="px-6 py-2 text-gray-500 dark:text-gray-400">{r.date}</td>
+                        <td className="px-6 py-2 flex gap-2">
+                          <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-medium shadow-sm hover:bg-blue-200 dark:hover:bg-blue-800 transition-all focus:ring-2 focus:ring-blue-300 outline-none" onClick={() => openModal(r)} aria-label="Voir le rapport">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-6 0a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>
                             Voir
                           </button>

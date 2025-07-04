@@ -168,7 +168,7 @@ const CoursesPage = () => {
               onChange={e => { setSearch(e.target.value); setPage(1); }}
               aria-label="Rechercher un cours"
             />
-            <button className="btn btn-primary rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform" onClick={openAddModal} aria-label="Ajouter un cours">
+            <button className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 text-white font-bold shadow-lg backdrop-blur-md hover:from-blue-600 hover:to-indigo-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-300 outline-none" onClick={openAddModal} aria-label="Ajouter un cours">
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
               Ajouter
             </button>
@@ -182,11 +182,11 @@ const CoursesPage = () => {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
                 <thead>
                   <tr className="bg-blue-50 dark:bg-gray-800">
-                    <th className="px-4 py-2 text-left font-semibold">Titre</th>
-                    <th className="px-4 py-2 text-left font-semibold">Professeur</th>
-                    <th className="px-4 py-2 text-left font-semibold">Classe</th>
-                    <th className="px-4 py-2 text-left font-semibold">Horaire</th>
-                    <th className="px-4 py-2 text-left font-semibold">Actions</th>
+                    <th className="px-6 py-2 text-left font-semibold">Titre</th>
+                    <th className="px-6 py-2 text-left font-semibold">Professeur</th>
+                    <th className="px-6 py-2 text-left font-semibold">Classe</th>
+                    <th className="px-6 py-2 text-left font-semibold">Horaire</th>
+                    <th className="px-6 py-2 text-left font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -197,26 +197,26 @@ const CoursesPage = () => {
                   ) : (
                     paginatedCourses.map((course, idx) => (
                       <tr key={course.id} className={`transition-colors ${idx % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'} hover:bg-blue-100 dark:hover:bg-blue-950`}>
-                        <td className="px-4 py-2 font-semibold text-gray-800 dark:text-white">{course.title}</td>
-                        <td className="px-4 py-2">
+                        <td className="px-6 py-2 font-semibold text-gray-800 dark:text-white">{course.title}</td>
+                        <td className="px-6 py-2">
                           <span className="px-2 py-1 rounded-full text-xs font-bold bg-blue-500 text-white">
                             {professors.find(p => p.id === course.professor)?.name || '—'}
                           </span>
                         </td>
-                        <td className="px-4 py-2 text-gray-600 dark:text-gray-300">{course.class}</td>
-                        <td className="px-4 py-2 text-gray-600 dark:text-gray-300">{
+                        <td className="px-6 py-2 text-gray-600 dark:text-gray-300">{course.class}</td>
+                        <td className="px-6 py-2 text-gray-600 dark:text-gray-300">{
                           typeof course.schedule === 'string'
                             ? course.schedule
                             : course.schedule
                               ? `${course.schedule.day || ''} ${course.schedule.start || ''}-${course.schedule.end || ''} ${course.schedule.room || ''}`.trim()
                               : ''
                         }</td>
-                        <td className="px-4 py-2 flex gap-2">
-                          <button className="btn btn-xs btn-warning rounded-full flex items-center gap-1 shadow hover:scale-105 transition-transform" onClick={() => openEditModal(course)} aria-label="Modifier">
+                        <td className="px-6 py-2 flex gap-2">
+                          <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-medium shadow-sm hover:bg-blue-200 dark:hover:bg-blue-800 transition-all focus:ring-2 focus:ring-blue-300 outline-none" onClick={() => openEditModal(course)} aria-label="Modifier">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V17h4"/></svg>
                             Modifier
                           </button>
-                          <button className="btn btn-xs btn-error rounded-full flex items-center gap-1 shadow hover:scale-105 transition-transform" onClick={() => handleDelete(course)} aria-label="Supprimer">
+                          <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 font-medium shadow-sm hover:bg-red-200 dark:hover:bg-red-800 transition-all focus:ring-2 focus:ring-red-300 outline-none" onClick={() => handleDelete(course)} aria-label="Supprimer">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
                             Supprimer
                           </button>
@@ -292,7 +292,7 @@ const CoursesPage = () => {
                   required
                 />
                 {formError && <div className="text-red-500 text-sm">{formError}</div>}
-                <button className="btn btn-primary mt-2 rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform" type="submit" disabled={formLoading}>
+                <button className="w-full flex justify-center items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 text-white font-bold shadow-lg backdrop-blur-md hover:from-blue-600 hover:to-indigo-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-300 outline-none mt-2" type="submit" disabled={formLoading}>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
                   {formLoading ? 'Enregistrement...' : modalMode === 'add' ? 'Ajouter' : 'Enregistrer'}
                 </button>

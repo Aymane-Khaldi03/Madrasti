@@ -29,6 +29,7 @@ const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
+const SIDEBAR_GRADIENT = "bg-gradient-to-b from-blue-900 via-blue-800 to-purple-900"
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -185,13 +186,35 @@ const Sidebar = React.forwardRef<
       return (
         <div
           className={cn(
-            "flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground",
+            `${SIDEBAR_GRADIENT} flex h-full w-[--sidebar-width] flex-col text-sidebar-foreground shadow-2xl rounded-r-3xl py-6 px-3 border-r border-blue-950/30`,
             className
           )}
           ref={ref}
           {...props}
         >
-          {children}
+          <div className="flex items-center gap-2 mb-8 px-2">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
+            <span className="text-2xl font-extrabold text-white tracking-tight">EduSphere</span>
+          </div>
+          <Separator className="bg-blue-800/40 mb-6" />
+          <nav className="flex flex-col gap-2 flex-1">
+            <a href="/admin" className="flex items-center gap-3 px-4 py-2 rounded-xl text-white font-semibold bg-blue-700/80 hover:bg-blue-600/90 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className=""><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"/></svg>
+              Tableau de bord
+            </a>
+          </nav>
+          <div className="mt-auto pt-8">
+            <Separator className="bg-blue-800/40 mb-4" />
+            <div className="flex items-center gap-2 px-2">
+              <div className="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center text-white font-bold">A</div>
+              <div>
+                <div className="text-white font-semibold">Administrateur</div>
+                <div className="text-xs text-blue-200">admin@edusphere.ma</div>
+              </div>
+            </div>
+            <Button variant="ghost" className="w-full mt-4 rounded-xl text-blue-200 hover:bg-blue-800/60">Déconnexion</Button>
+            <div className="text-xs text-blue-300 text-center mt-2">v1.0.0</div>
+          </div>
         </div>
       )
     }
@@ -214,7 +237,18 @@ const Sidebar = React.forwardRef<
               <SheetTitle>Sidebar</SheetTitle>
               <SheetDescription>Displays the mobile sidebar.</SheetDescription>
             </SheetHeader>
-            <div className="flex h-full w-full flex-col">{children}</div>
+            <div className="flex h-full w-full flex-col">
+              <button
+                className="fixed top-4 left-4 z-50 flex md:hidden items-center justify-center w-12 h-12 rounded-full bg-white/80 shadow-lg backdrop-blur-md transition-all focus:ring-2 focus:ring-blue-400 outline-none"
+                aria-label={openMobile ? 'Fermer le menu' : 'Ouvrir le menu'}
+                onClick={() => setOpenMobile(!openMobile)}
+              >
+                <span className={`block w-6 h-0.5 bg-blue-900 rounded transition-all duration-300 ${openMobile ? 'rotate-45 translate-y-2' : ''}`}></span>
+                <span className={`block w-6 h-0.5 bg-blue-900 rounded transition-all duration-300 my-1 ${openMobile ? 'opacity-0' : ''}`}></span>
+                <span className={`block w-6 h-0.5 bg-blue-900 rounded transition-all duration-300 ${openMobile ? '-rotate-45 -translate-y-2' : ''}`}></span>
+              </button>
+              {children}
+            </div>
           </SheetContent>
         </Sheet>
       )
@@ -258,7 +292,10 @@ const Sidebar = React.forwardRef<
             data-sidebar="sidebar"
             className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
           >
-            {children}
+            <aside className={`fixed top-0 left-0 z-40 h-full transition-transform duration-300 md:static md:translate-x-0 ${openMobile ? 'translate-x-0' : '-translate-x-full'} w-[--sidebar-width] ${SIDEBAR_GRADIENT} shadow-2xl rounded-r-3xl py-6 px-3 border-r border-blue-950/30`}>
+              {children}
+            </aside>
+            <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm md:hidden animate-fade-in" onClick={() => setOpenMobile(false)} aria-label="Fermer le menu" tabIndex={0}></div>
           </div>
         </div>
       </div>

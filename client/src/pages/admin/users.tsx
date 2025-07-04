@@ -163,7 +163,7 @@ const UsersPage = () => {
               onChange={e => { setSearch(e.target.value); setPage(1); }}
               aria-label="Rechercher un utilisateur"
             />
-            <button className="btn btn-primary rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform" onClick={openAddModal} aria-label="Ajouter un utilisateur">
+            <button className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 text-white font-bold shadow-lg backdrop-blur-md hover:from-blue-600 hover:to-indigo-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-300 outline-none" onClick={openAddModal} aria-label="Ajouter un utilisateur">
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
               Ajouter
             </button>
@@ -190,22 +190,22 @@ const UsersPage = () => {
                     </tr>
                   ) : (
                     paginatedUsers.map((user, idx) => (
-                      <tr key={user.id} className={`transition-colors ${idx % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'} hover:bg-blue-100 dark:hover:bg-blue-950`}>
-                        <td className="px-4 py-2 font-semibold text-gray-800 dark:text-white">{user.name}</td>
-                        <td className="px-4 py-2">
+                      <tr key={user.id} className={`transition-all duration-200 rounded-lg shadow-sm hover:shadow-md border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 ${idx % 2 === 0 ? '' : 'bg-gray-50 dark:bg-gray-950/40'}`}>
+                        <td className="px-6 py-2 align-middle text-sm">{user.name}</td>
+                        <td className="px-6 py-2 align-middle text-sm">
                           <span className={`px-2 py-1 rounded-full text-xs font-bold ${user.role === 'admin' ? 'bg-red-500 text-white' : user.role === 'professor' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'}`}>
                             {user.role === 'student' ? 'Élève' : user.role === 'professor' ? 'Professeur' : 'Administrateur'}
                           </span>
                         </td>
-                        <td className="px-4 py-2 text-gray-600 dark:text-gray-300">{user.email}</td>
-                        <td className="px-4 py-2 flex gap-2">
-                          <button className="btn btn-xs btn-warning rounded-full flex items-center gap-1 shadow hover:scale-105 transition-transform" onClick={() => openEditModal(user)} aria-label="Modifier">
+                        <td className="px-6 py-2 align-middle text-sm text-gray-600 dark:text-gray-300">{user.email}</td>
+                        <td className="px-6 py-2 align-middle text-sm flex gap-2">
+                          <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-medium shadow-sm hover:bg-blue-200 dark:hover:bg-blue-800 transition-all focus:ring-2 focus:ring-blue-300 outline-none" onClick={() => openEditModal(user)} aria-label="Modifier">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V17h4"/></svg>
-                            Modifier
+                            <span>Modifier</span>
                           </button>
-                          <button className="btn btn-xs btn-error rounded-full flex items-center gap-1 shadow hover:scale-105 transition-transform" onClick={() => handleDelete(user)} aria-label="Supprimer">
+                          <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 font-medium shadow-sm hover:bg-red-200 dark:hover:bg-red-800 transition-all focus:ring-2 focus:ring-red-300 outline-none" onClick={() => handleDelete(user)} aria-label="Supprimer">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                            Supprimer
+                            <span>Supprimer</span>
                           </button>
                         </td>
                       </tr>
@@ -268,7 +268,7 @@ const UsersPage = () => {
                   <option value="admin">Administrateur</option>
                 </select>
                 {formError && <div className="text-red-500 text-sm">{formError}</div>}
-                <button className="btn btn-primary mt-2 rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform" type="submit" disabled={formLoading}>
+                <button className="w-full flex justify-center items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 text-white font-bold shadow-lg backdrop-blur-md hover:from-blue-600 hover:to-indigo-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-300 outline-none mt-2" type="submit" disabled={formLoading}>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
                   {formLoading ? 'Enregistrement...' : modalMode === 'add' ? 'Ajouter' : 'Enregistrer'}
                 </button>

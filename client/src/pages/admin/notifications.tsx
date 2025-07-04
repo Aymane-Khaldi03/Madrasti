@@ -132,7 +132,7 @@ const NotificationsPage = () => {
               <option value="Élèves">Élèves</option>
             </select>
             <button
-              className="btn btn-primary rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform"
+              className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 text-white text-sm font-bold shadow-lg backdrop-blur-md hover:from-blue-600 hover:to-indigo-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-300 outline-none"
               type="submit"
               disabled={formLoading}
               aria-label="Envoyer la notification"
@@ -167,7 +167,7 @@ const NotificationsPage = () => {
                 <li className="text-center py-4 text-gray-400">Aucune notification trouvée</li>
               ) : (
                 paginated.map(n => (
-                  <li key={n.id} className="py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2 hover:bg-blue-50 dark:hover:bg-blue-950 rounded-xl px-2 transition-colors">
+                  <li key={n.id} className="py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-2 hover:bg-blue-50 dark:hover:bg-blue-950 rounded-xl px-2 transition-colors">
                     <div className="flex flex-col gap-1">
                       <span className="font-semibold text-blue-700 dark:text-blue-300 text-sm">{n.title}</span>
                       <span className="text-gray-600 dark:text-gray-300 text-xs">{n.message}</span>
