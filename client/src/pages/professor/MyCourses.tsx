@@ -18,30 +18,53 @@ const ProfessorMyCourses: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Courses</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <table className="min-w-full bg-white rounded shadow">
-          <thead>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-extrabold tracking-tight mb-6">Courses</h1>
+      <div className="overflow-x-auto rounded-lg shadow bg-white dark:bg-gray-800">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
-              <th className="p-2">Title</th>
-              <th className="p-2">Professor</th>
-              <th className="p-2">Progress</th>
+              <th className="p-3 text-left font-semibold">Title</th>
+              <th className="p-3 text-left font-semibold">Professor</th>
+              <th className="p-3 text-left font-semibold">Progress</th>
             </tr>
           </thead>
-          <tbody>
-            {courses.map((c, i) => (
-              <tr key={i} className="border-t">
-                <td className="p-2">{c.title}</td>
-                <td className="p-2">{c.professor}</td>
-                <td className="p-2">{c.progress}%</td>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+            {loading ? (
+              <tr>
+                <td colSpan={3} className="p-4 text-center">
+                  Loading...
+                </td>
               </tr>
-            ))}
+            ) : courses.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="p-4 text-center">
+                  No courses found.
+                </td>
+              </tr>
+            ) : (
+              courses.map((c, i) => (
+                <tr
+                  key={i}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+                >
+                  <td className="p-3 font-medium">{c.title}</td>
+                  <td className="p-3">{c.professor}</td>
+                  <td className="p-3">
+                    <div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
+                      <div
+                        className="bg-blue-500 h-3 rounded-full"
+                        style={{ width: `${c.progress}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-xs ml-2">{c.progress}%</span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-      )}
+      </div>
     </div>
   );
 };

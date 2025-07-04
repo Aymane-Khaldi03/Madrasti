@@ -22,35 +22,42 @@ const ProfessorGrades = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Grades</h1>
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-3xl font-extrabold tracking-tight mb-6">Grades</h1>
       {loading ? (
-        <p>Loading...</p>
+        <div className="p-4 text-center">Loading...</div>
       ) : grades ? (
         <>
-          <div className="mb-4">
-            <span className="font-semibold">Average:</span>{" "}
-            <span>{grades.average}/20</span>
+          <div className="mb-6 flex items-center gap-4">
+            <span className="font-semibold text-lg">Average:</span>
+            <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-bold text-lg">
+              {grades.average}/20
+            </span>
           </div>
-          <table className="min-w-full bg-white rounded shadow">
-            <thead>
-              <tr>
-                <th className="p-2">Subject</th>
-                <th className="p-2">Grade</th>
-              </tr>
-            </thead>
-            <tbody>
-              {grades.subjects.map((s, i) => (
-                <tr key={i} className="border-t">
-                  <td className="p-2">{s.subject}</td>
-                  <td className="p-2">{s.grade}</td>
+          <div className="overflow-x-auto rounded-lg shadow bg-white dark:bg-gray-800">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-900">
+                <tr>
+                  <th className="p-3 text-left font-semibold">Subject</th>
+                  <th className="p-3 text-left font-semibold">Grade</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                {grades.subjects.map((s, i) => (
+                  <tr
+                    key={i}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+                  >
+                    <td className="p-3 font-medium">{s.subject}</td>
+                    <td className="p-3">{s.grade}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       ) : (
-        <p>No grades available.</p>
+        <div className="p-4 text-center">No grades available.</div>
       )}
     </div>
   );

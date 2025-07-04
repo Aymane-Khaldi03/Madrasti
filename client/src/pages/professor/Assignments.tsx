@@ -20,34 +20,40 @@ const ProfessorAssignments: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Assignments</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <table className="min-w-full bg-white rounded shadow">
-          <thead>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-extrabold tracking-tight mb-6">Assignments</h1>
+      <div className="overflow-x-auto rounded-lg shadow bg-white dark:bg-gray-800">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
-              <th className="p-2">Title</th>
-              <th className="p-2">Course</th>
-              <th className="p-2">Due</th>
-              <th className="p-2">Status</th>
-              <th className="p-2">Grade</th>
+              <th className="p-3 text-left font-semibold">Title</th>
+              <th className="p-3 text-left font-semibold">Course</th>
+              <th className="p-3 text-left font-semibold">Due</th>
+              <th className="p-3 text-left font-semibold">Status</th>
+              <th className="p-3 text-left font-semibold">Grade</th>
             </tr>
           </thead>
-          <tbody>
-            {assignments.map((a, i) => (
-              <tr key={i} className="border-t">
-                <td className="p-2">{a.title}</td>
-                <td className="p-2">{a.course}</td>
-                <td className="p-2">{a.due || "-"}</td>
-                <td className="p-2">{a.status}</td>
-                <td className="p-2">{a.grade || "-"}</td>
-              </tr>
-            ))}
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+            {loading ? (
+              <tr><td colSpan={5} className="p-4 text-center">Loading...</td></tr>
+            ) : assignments.length === 0 ? (
+              <tr><td colSpan={5} className="p-4 text-center">No assignments found.</td></tr>
+            ) : (
+              assignments.map((a, i) => (
+                <tr key={i} className="hover:bg-gray-50 dark:hover:bg-gray-900 transition">
+                  <td className="p-3 font-medium">{a.title}</td>
+                  <td className="p-3">{a.course}</td>
+                  <td className="p-3">{a.due || "-"}</td>
+                  <td className="p-3">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${a.status === 'Open' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}`}>{a.status}</span>
+                  </td>
+                  <td className="p-3">{a.grade || "-"}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-      )}
+      </div>
     </div>
   );
 };

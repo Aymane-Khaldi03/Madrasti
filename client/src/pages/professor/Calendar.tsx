@@ -18,26 +18,35 @@ const ProfessorCalendar: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Calendar</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul className="space-y-3">
-          {events.map((e, i) => (
-            <li
-              key={i}
-              className="bg-white rounded shadow p-3 flex justify-between"
-            >
-              <div>
-                <div className="font-semibold">{e.title}</div>
-                <div className="text-sm text-gray-600">{e.date}</div>
-              </div>
-              <div className="text-right text-gray-700">{e.time}</div>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-3xl font-extrabold tracking-tight mb-6">Calendar</h1>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        {loading ? (
+          <div className="p-4 text-center">Loading...</div>
+        ) : events.length === 0 ? (
+          <div className="p-4 text-center">No events found.</div>
+        ) : (
+          <ul className="space-y-3">
+            {events.map((e, i) => (
+              <li
+                key={i}
+                className="flex items-center gap-4 border-b last:border-b-0 pb-3"
+              >
+                <span className="inline-block w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
+                  4C5
+                </span>
+                <div className="flex-1">
+                  <div className="font-semibold">{e.title}</div>
+                  <div className="text-sm text-gray-600">{e.date}</div>
+                </div>
+                <div className="text-right text-gray-700 font-mono">
+                  {e.time}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
