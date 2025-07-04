@@ -27,13 +27,22 @@ import ReportsPage from "@/pages/admin/reports";
 import AnnouncementsPage from "@/pages/admin/announcements";
 import CalendarPage from "@/pages/admin/calendar";
 import NotificationsPage from "@/pages/admin/notifications";
+import ProfessorAssignments from "@/pages/professor/Assignments";
+import ProfessorGrades from "@/pages/professor/Grades";
+import ProfessorMyCourses from "@/pages/professor/MyCourses";
+import ProfessorCalendar from "@/pages/professor/Calendar";
+import ProfessorNotifications from "@/pages/professor/Notifications";
+import ProfessorStudents from "@/pages/professor/Students";
+
+import React, { useState } from "react";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
+      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex">
         {user && <Sidebar />}
         <main className="flex-1">
@@ -97,6 +106,49 @@ function Router() {
         <ProtectedRoute requiredRole="professor">
           <DashboardLayout>
             <ProfessorDashboard />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      {/* Professor pages */}
+      <Route path="/professor/assignments">
+        <ProtectedRoute requiredRole="professor">
+          <DashboardLayout>
+            <ProfessorAssignments />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/professor/grades">
+        <ProtectedRoute requiredRole="professor">
+          <DashboardLayout>
+            <ProfessorGrades />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/professor/courses">
+        <ProtectedRoute requiredRole="professor">
+          <DashboardLayout>
+            <ProfessorMyCourses />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/professor/calendar">
+        <ProtectedRoute requiredRole="professor">
+          <DashboardLayout>
+            <ProfessorCalendar />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/professor/notifications">
+        <ProtectedRoute requiredRole="professor">
+          <DashboardLayout>
+            <ProfessorNotifications />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/professor/students">
+        <ProtectedRoute requiredRole="professor">
+          <DashboardLayout>
+            <ProfessorStudents />
           </DashboardLayout>
         </ProtectedRoute>
       </Route>
