@@ -167,6 +167,9 @@ const Sidebar = React.forwardRef<
     side?: "left" | "right"
     variant?: "sidebar" | "floating" | "inset"
     collapsible?: "offcanvas" | "icon" | "none"
+    openMobile?: boolean
+    collapsed?: boolean
+    setOpenMobile?: (open: boolean) => void
   }
 >(
   (
@@ -174,13 +177,16 @@ const Sidebar = React.forwardRef<
       side = "left",
       variant = "sidebar",
       collapsible = "offcanvas",
+      openMobile = false,
+      collapsed = false,
       className,
       children,
+      setOpenMobile: setOpenMobileProp,
       ...props
     },
     ref
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const { isMobile, state, openMobile: contextOpenMobile, setOpenMobile } = useSidebar()
 
     if (collapsible === "none") {
       return (
@@ -221,11 +227,11 @@ const Sidebar = React.forwardRef<
 
     if (isMobile) {
       return (
-        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+        <Sheet open={openMobile} onOpenChange={setOpenMobileProp} {...props}>
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground rounded-tr-3xl rounded-br-3xl shadow-inner shadow-2xl transition-transform duration-300 ease-in-out !top-0 !left-0 h-screen"
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -249,6 +255,7 @@ const Sidebar = React.forwardRef<
               </button>
               {children}
             </div>
+            {openMobile && <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden" aria-label="Fermer le menu" tabIndex={0} onClick={() => setOpenMobile(false)} />}
           </SheetContent>
         </Sheet>
       )
@@ -607,7 +614,12 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        className={cn(
+          sidebarMenuButtonVariants({ variant, size }),
+          className,
+          isActive && 'scale-110 text-primary animate-pulse',
+          state === 'collapsed' && 'text-transparent'
+        )}
         {...props}
       />
     )
