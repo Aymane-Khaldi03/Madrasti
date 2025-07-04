@@ -21,7 +21,7 @@ const ProfessorMyCourses: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 w-full h-full flex flex-col">
       <h1 className="text-3xl font-extrabold tracking-tight mb-6">Courses</h1>
       <div className="overflow-x-auto rounded-lg shadow bg-white dark:bg-gray-800">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

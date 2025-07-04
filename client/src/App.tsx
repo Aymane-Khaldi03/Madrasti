@@ -46,19 +46,18 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-        <Header /> {/* uses SidebarTrigger internally */}
-        <div className="flex flex-1 overflow-hidden">
+      <div className="min-h-screen flex flex-col w-full bg-gray-50 dark:bg-gray-900">
+        <Header />
+        <div className="flex w-full flex-1 min-h-0">
           <Sidebar
+            className="peer"
             side="left"
             variant="sidebar"
             collapsible={isMobile ? "offcanvas" : "icon"}
           >
-            <SidebarNav />          {/*  NEW – adds the items */}
+            <SidebarNav />
           </Sidebar>
-          <SidebarInset className="p-4 md:p-8 overflow-y-auto flex-1">
-            {children}
-          </SidebarInset>
+          <SidebarInset className="flex-1 w-full min-w-0 flex flex-col">{children}</SidebarInset>
         </div>
       </div>
     </SidebarProvider>

@@ -122,8 +122,8 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-500">
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="min-h-screen w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-500 flex flex-col">
+      <div className="p-6 space-y-6 w-full flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <div>

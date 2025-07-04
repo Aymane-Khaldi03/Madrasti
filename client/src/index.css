@@ -160,33 +160,20 @@
 }
 
 @layer components {
-  .hero-gradient {
-    background: linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%);
-  }
-  
   .card-hover {
     @apply transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl;
   }
-  
+
   .btn-primary {
     @apply bg-primary text-primary-foreground transition-colors duration-200;
-    &:hover {
-      background-color: rgba(37,99,235,0.9);
-    }
   }
-  
-  .fade-in {
-    animation: fadeIn 0.6s ease-in-out;
-  }
-  
-  .slide-up {
-    animation: slideUp 0.8s ease-out;
-  }
-  
-  .smooth-scroll {
-    scroll-behavior: smooth;
-  }
+
+  .fade-in  { animation: fadeIn 0.6s ease-in-out; }
+  .slide-up { animation: slideUp 0.8s ease-out; }
+
+  .smooth-scroll { scroll-behavior: smooth; }
 }
+
 
 @keyframes fadeIn {
   from {

@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { PanelLeft } from "lucide-react"
+import { PanelLeft, GraduationCap } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -25,9 +25,9 @@ import {
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = "16rem"
-const SIDEBAR_WIDTH_MOBILE = "18rem"
-const SIDEBAR_WIDTH_ICON = "3rem"
+const SIDEBAR_WIDTH = "17rem" // Increased for more space
+const SIDEBAR_WIDTH_MOBILE = "19rem" // Slightly larger for mobile
+const SIDEBAR_WIDTH_ICON = "5.2rem" // 83.2px, more space for icon + left padding
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 const SIDEBAR_GRADIENT = "bg-gradient-to-b from-blue-900 via-blue-800 to-purple-900"
 
@@ -186,7 +186,7 @@ const Sidebar = React.forwardRef<
     },
     ref
   ) => {
-    const { isMobile, state, openMobile: contextOpenMobile, setOpenMobile } = useSidebar()
+    const { isMobile, state, openMobile: contextOpenMobile, setOpenMobile } = useSidebar();
 
     if (collapsible === "none") {
       return (
@@ -198,31 +198,9 @@ const Sidebar = React.forwardRef<
           ref={ref}
           {...props}
         >
-          <div className="flex items-center gap-2 mb-8 px-2">
-            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
-            <span className="text-2xl font-extrabold text-white tracking-tight">EduSphere</span>
-          </div>
-          <Separator className="bg-blue-800/40 mb-6" />
-          <nav className="flex flex-col gap-2 flex-1">
-            <a href="/admin" className="flex items-center gap-3 px-4 py-2 rounded-xl text-white font-semibold bg-blue-700/80 hover:bg-blue-600/90 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400">
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className=""><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" /></svg>
-              Tableau de bord
-            </a>
-          </nav>
-          <div className="mt-auto pt-8">
-            <Separator className="bg-blue-800/40 mb-4" />
-            <div className="flex items-center gap-2 px-2">
-              <div className="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center text-white font-bold">A</div>
-              <div>
-                <div className="text-white font-semibold">Administrateur</div>
-                <div className="text-xs text-blue-200">admin@edusphere.ma</div>
-              </div>
-            </div>
-            <Button variant="ghost" className="w-full mt-4 rounded-xl text-blue-200 hover:bg-blue-800/60">Déconnexion</Button>
-            <div className="text-xs text-blue-300 text-center mt-2">v1.0.0</div>
-          </div>
+          {children}
         </div>
-      )
+      );
     }
 
     if (isMobile) {
@@ -261,90 +239,69 @@ const Sidebar = React.forwardRef<
       )
     }
 
+    // Desktop: dynamic width logic
+    const isIcon = state === "collapsed" && collapsible === "icon";
+    const isCollapsed = state === "collapsed" && collapsible !== "icon";
     return (
       <div
         ref={ref}
-        className="group peer hidden text-sidebar-foreground md:block"
+        className={cn(
+          "group peer text-sidebar-foreground md:block h-full",
+          isCollapsed ? "w-0 min-w-0 overflow-hidden" : isIcon ? "w-[4.5rem] min-w-0" : "w-[16rem] min-w-0",
+          className
+        )}
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
         data-side={side}
+        {...props}
       >
-        {/* This is what handles the sidebar gap on desktop */}
-        <div
-          className={cn(
-            "relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear",
-            "group-data-[collapsible=offcanvas]:w-0",
-            "group-data-[side=right]:rotate-180",
-            variant === "floating" || variant === "inset"
-              ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
-              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
-          )}
-        />
-        <div
-          className={cn(
-            "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
-            side === "left"
-              ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-              : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-            // Adjust the padding for floating and inset variants.
-            variant === "floating" || variant === "inset"
-              ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
-            className
-          )}
-          {...props}
-        >
-          <div
-            data-sidebar="sidebar"
-            className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
-          >
-            <aside
-              className={`fixed top-0 left-0 z-40 h-full transition-all duration-300
-              md:static md:translate-x-0 ${openMobile ? 'translate-x-0' : '-translate-x-full'}
-              w-[--sidebar-width] group-data-[collapsible=icon]:w-[--sidebar-width-icon]
-              overflow-hidden                      /* hides spill-over when collapsed */
-              ${SIDEBAR_GRADIENT}
-              shadow-2xl rounded-r-3xl py-6 px-3 border-r border-blue-950/30`}
-            >
-              {children}
-            </aside>
-
-            <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm md:hidden animate-fade-in" onClick={() => setOpenMobile(false)} aria-label="Fermer le menu" tabIndex={0}></div>
+        {/* Only render children if not fully collapsed */}
+        {!isCollapsed && (
+          <div className="h-full flex flex-col bg-sidebar shadow-2xl rounded-r-3xl py-6 px-3 border-r border-blue-950/30">
+            {children}
           </div>
-        </div>
+        )}
       </div>
     )
   }
 )
 Sidebar.displayName = "Sidebar"
 
-const SidebarTrigger = React.forwardRef<
-  React.ElementRef<typeof Button>,
-  React.ComponentProps<typeof Button>
->(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar()
-
-  return (
-    <Button
-      ref={ref}
-      data-sidebar="trigger"
-      variant="ghost"
-      size="icon"
-      className={cn("h-7 w-7", className)}
-      onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
-      }}
-      {...props}
-    >
-      <PanelLeft />
-      <span className="sr-only">Toggle Sidebar</span>
-    </Button>
-  )
-})
+// SidebarTrigger: modern, floating, circular button with hamburger icon
+export const SidebarTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+  ({ className, ...props }, ref) => {
+    const { toggleSidebar, state, isMobile } = useSidebar();
+    return (
+      <button
+        ref={ref}
+        type="button"
+        aria-label="Toggle sidebar"
+        onClick={toggleSidebar}
+        className={cn(
+          // Push up into header, responsive for mobile/desktop, never overlaps text
+          "fixed top-1.5 left-2 md:left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white/80 dark:bg-blue-950/80 shadow-lg border border-blue-200 dark:border-blue-900 hover:bg-blue-100 dark:hover:bg-blue-900 transition-all duration-300",
+          className
+        )}
+        style={{ boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)' }}
+      >
+        <span className="sr-only">Toggle sidebar</span>
+        <svg
+          className="h-7 w-7 text-blue-900 dark:text-blue-100"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    );
+  }
+);
 SidebarTrigger.displayName = "SidebarTrigger"
 
+// SidebarRail: a11y-friendly, always-visible rail for sidebar toggle
 const SidebarRail = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button">
@@ -378,19 +335,26 @@ const SidebarInset = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"main">
 >(({ className, ...props }, ref) => {
+  const { state, isMobile } = useSidebar();
   return (
     <main
       ref={ref}
+      data-sidebar="inset"
       className={cn(
-        "relative flex w-full flex-1 flex-col bg-background",
-        "md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        // Remove all forced margins, let content stretch
+        "flex flex-col flex-1 min-w-0 w-full max-w-full overflow-y-auto bg-gray-50/5 dark:bg-gray-950/10 transition-all duration-500",
+        isMobile
+          ? "px-2 py-2 sm:px-4 sm:py-4"
+          : "px-4 py-4 sm:px-8 sm:py-8",
         className
       )}
       {...props}
     />
-  )
-})
-SidebarInset.displayName = "SidebarInset"
+  );
+});
+SidebarInset.displayName = "SidebarInset";
+
+
 
 const SidebarInput = React.forwardRef<
   React.ElementRef<typeof Input>,
@@ -593,6 +557,7 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
+// SidebarMenuButton: responsive icon size and sidebar width (smaller, dynamic)
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button"> & {
@@ -609,12 +574,32 @@ const SidebarMenuButton = React.forwardRef<
       size = "default",
       tooltip,
       className,
+      children,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : "button"
     const { isMobile, state } = useSidebar()
+
+    // Responsive icon size and sidebar width for all screens
+    let iconSize = '1.5rem';
+    let sidebarWidth = 'w-[5.2rem] min-w-[83.2px]';
+    if (isMobile) {
+      iconSize = '1.1rem';
+      sidebarWidth = 'w-[4.2rem] min-w-[67.2px]';
+    } else if (window.innerWidth < 640) {
+      iconSize = '1.15rem';
+      sidebarWidth = 'w-[4.5rem] min-w-[72px]';
+    } else if (window.innerWidth < 1024) {
+      iconSize = '1.2rem';
+      sidebarWidth = 'w-[5rem] min-w-[80px]';
+    }
+
+    // Push icon to the absolute left in collapsed mode
+    const collapsedClasses = state === 'collapsed'
+      ? `bg-white dark:bg-blue-950 h-[3.5rem] min-h-[56px] flex items-center justify-start p-0 text-blue-700 dark:text-blue-100 ${sidebarWidth}`
+      : '';
 
     const button = (
       <Comp
@@ -626,10 +611,22 @@ const SidebarMenuButton = React.forwardRef<
           sidebarMenuButtonVariants({ variant, size }),
           className,
           isActive && 'scale-110 text-primary animate-pulse',
-          state === 'collapsed' && 'text-transparent'
+          collapsedClasses,
+          state === 'collapsed' && '!text-blue-700 dark:!text-blue-100',
         )}
+        style={state === 'collapsed' ? { fontSize: iconSize, justifyContent: 'flex-start', textAlign: 'left' } : {}}
         {...props}
-      />
+      >
+        {/* Icon always absolutely left-aligned in collapsed mode */}
+        {state === 'collapsed' ? (
+          <span className="flex items-center ml-0 mr-auto pl-0">
+            {/* Only render the first child (icon) in collapsed mode */}
+            {Array.isArray(children) ? children[0] : children}
+          </span>
+        ) : (
+          children
+        )}
+      </Comp>
     )
 
     if (!tooltip) {
@@ -823,6 +820,5 @@ export {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
-  SidebarTrigger,
   useSidebar,
 }
