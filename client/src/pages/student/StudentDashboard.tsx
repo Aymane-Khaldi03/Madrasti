@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,9 +8,6 @@ import { Progress } from '@/components/ui/progress';
 import {
   BookOpen, CheckCircle, Clock, Star, FileText, Calculator, Atom, Download, Calendar, Mail, User, MapPin, Phone
 } from 'lucide-react';
-
-const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
-const STUDENT_NAME = "Youssef"; // À remplacer dynamiquement
 
 // Types explicites pour chaque entité
 interface Assignment {
@@ -54,12 +52,13 @@ interface GradesResponse {
 const CONTACT = {
   email: 'conseiller@ecole.com',
   phone: '+212612345678',
-  address: '123 Avenue de l’Administration, Casablanca',
-  maps: 'https://www.google.com/maps?q=123+Avenue+de+l’Administration,+Casablanca',
+  address: "123 Avenue de l'Administration, Casablanca",
+  maps: "https://www.google.com/maps?q=123+Avenue+de+l%27Administration,+Casablanca",
 };
 
 const StudentDashboard: React.FC = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -70,24 +69,31 @@ const StudentDashboard: React.FC = () => {
   const [showContact, setShowContact] = useState(false);
 
   useEffect(() => {
+    if (!user?.id) return;
+    
     async function fetchData() {
       setLoading(true);
-      const [assignmentsRes, coursesRes, eventsRes, gradesRes, notificationsRes] = await Promise.all([
-        fetch(`/api/student/assignments?studentId=${STUDENT_ID}`),
-        fetch(`/api/student/courses?studentId=${STUDENT_ID}`),
-        fetch(`/api/student/calendar?studentId=${STUDENT_ID}`),
-        fetch(`/api/student/grades?studentId=${STUDENT_ID}`),
-        fetch(`/api/student/notifications?studentId=${STUDENT_ID}`),
-      ]);
-      setAssignments(await assignmentsRes.json());
-      setCourses(await coursesRes.json());
-      setEvents(await eventsRes.json());
-      setGrades(await gradesRes.json());
-      setNotifications(await notificationsRes.json());
-      setLoading(false);
+      try {
+        const [assignmentsRes, coursesRes, eventsRes, gradesRes, notificationsRes] = await Promise.all([
+          fetch(`/api/student/assignments?studentId=${user?.id}`),
+          fetch(`/api/student/courses?studentId=${user?.id}`),
+          fetch(`/api/student/calendar?studentId=${user?.id}`),
+          fetch(`/api/student/grades?studentId=${user?.id}`),
+          fetch(`/api/student/notifications?studentId=${user?.id}`),
+        ]);
+        setAssignments(await assignmentsRes.json());
+        setCourses(await coursesRes.json());
+        setEvents(await eventsRes.json());
+        setGrades(await gradesRes.json());
+        setNotifications(await notificationsRes.json());
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   // Statistiques dynamiques
   const stats = [
@@ -139,7 +145,7 @@ const StudentDashboard: React.FC = () => {
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-lg mt-2">
               {`Bon retour, `}
-              <span className="font-bold text-blue-700 dark:text-blue-300">{STUDENT_NAME}</span>
+              <span className="font-bold text-blue-700 dark:text-blue-300">{user?.name || 'Étudiant'}</span>
               {` ! Voici votre espace étudiant.`}
             </p>
           </div>
@@ -151,7 +157,7 @@ const StudentDashboard: React.FC = () => {
               asChild
             >
               <a
-                href={`/api/student/grades/report?studentId=${STUDENT_ID}`}
+                href={`/api/student/grades/report?studentId=${user?.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 download

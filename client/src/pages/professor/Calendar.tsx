@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import CalendarLib from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { CalendarDays, Clock, BookOpen, AlertCircle, PlusCircle, XCircle, Filter } from "lucide-react";
@@ -11,8 +12,6 @@ interface Event {
   type?: string; // ex: 'correction', 'meeting', 'exam', 'event'
   description?: string;
 }
-
-const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
 
 const EVENT_COLORS: Record<string, string> = {
   correction: 'bg-blue-100 text-blue-700',
@@ -27,6 +26,7 @@ function formatDate(date: Date) {
 }
 
 const ProfessorCalendar: React.FC = () => {
+  const { user } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -45,11 +45,12 @@ const ProfessorCalendar: React.FC = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/professor/calendar?professorId=${PROFESSOR_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/professor/calendar?professorId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   // Toast auto-hide
   useEffect(() => {
@@ -252,7 +253,7 @@ const ProfessorCalendar: React.FC = () => {
                     setEditForm(addForm);
                     // Refresh
                     setLoading(true);
-                    fetch(`/api/professor/calendar?professorId=${PROFESSOR_ID}`)
+                    fetch(`/api/professor/calendar?professorId=${user?.id}`)
                       .then((res) => res.json())
                       .then((data) => setEvents(data))
                       .finally(() => setLoading(false));
@@ -276,7 +277,7 @@ const ProfessorCalendar: React.FC = () => {
                     setAddForm({ title: '', date: formatDate(new Date()), time: '', type: 'correction', description: '' });
                     // Refresh
                     setLoading(true);
-                    fetch(`/api/professor/calendar?professorId=${PROFESSOR_ID}`)
+                    fetch(`/api/professor/calendar?professorId=${user?.id}`)
                       .then((res) => res.json())
                       .then((data) => setEvents(data))
                       .finally(() => setLoading(false));
@@ -390,7 +391,7 @@ const ProfessorCalendar: React.FC = () => {
                     setModalEvent(null);
                     // Refresh
                     setLoading(true);
-                    fetch(`/api/professor/calendar?professorId=${PROFESSOR_ID}`)
+                    fetch(`/api/professor/calendar?professorId=${user?.id}`)
                       .then((res) => res.json())
                       .then((data) => setEvents(data))
                       .finally(() => setLoading(false));

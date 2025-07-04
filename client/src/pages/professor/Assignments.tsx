@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import { FileText, BookOpen, CalendarDays, Award, Eye } from "lucide-react";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface Assignment {
   id?: number | string;
@@ -11,8 +14,6 @@ interface Assignment {
   grade?: string | number;
 }
 
-const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
-
 const STATUS_COLORS: Record<string, string> = {
   'Open': 'bg-green-100 text-green-700',
   'Closed': 'bg-gray-200 text-gray-700',
@@ -21,15 +22,30 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 const ProfessorAssignments: React.FC = () => {
+  const { user } = useAuth();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<'add' | 'edit'>('add');
+  const [form, setForm] = useState<Assignment>({ title: '', course: '', due: '', status: 'open' });
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [editId, setEditId] = useState<number | string | undefined>(undefined);
+  const [deleteLoading, setDeleteLoading] = useState<string | number | null>(null);
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<'all' | 'open' | 'closed' | 'graded'>('all');
 
-  useEffect(() => {
-    fetch(`/api/professor/assignments?professorId=${PROFESSOR_ID}`)
+  const fetchAssignments = () => {
+    if (!user?.id) return;
+    setLoading(true);
+    fetch(`/api/professor/assignments?professorId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setAssignments(data))
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(() => { fetchAssignments(); }, [user?.id]);
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import { Star, BookOpen, Award } from "lucide-react";
 
-interface SubjectGrade {
+interface Grade {
+  id?: number | string;
   subject: string;
   grade: number;
+  coefficient?: number;
 }
 
 interface GradesData {
   average: number;
-  subjects: SubjectGrade[];
+  subjects: Grade[];
 }
-
-const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
 
 const getGradeColor = (grade: number) => {
   if (grade >= 15) return "bg-green-100 text-green-700";
@@ -19,16 +20,18 @@ const getGradeColor = (grade: number) => {
   return "bg-red-100 text-red-700";
 };
 
-const Grades = () => {
+const Grades: React.FC = () => {
+  const { user } = useAuth();
   const [grades, setGrades] = useState<GradesData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/student/grades?studentId=${STUDENT_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/student/grades?studentId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setGrades(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">

@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Bell, MailCheck } from "lucide-react";
 
 interface Notification {
-  id?: number | string;
+  id: string;
   title: string;
   message: string;
   date: string; // ISO string
   read?: boolean;
 }
 
-const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
 const PAGE_SIZE = 5;
 
 const Notifications = () => {
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetch(`/api/student/notifications?studentId=${STUDENT_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/student/notifications?studentId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setNotifications(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   // Recherche et pagination
   const filtered = notifications.filter(n =>

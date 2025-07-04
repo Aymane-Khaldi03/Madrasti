@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import { BookOpen, PlusCircle, Edit, Trash2, XCircle } from "lucide-react";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -10,8 +11,6 @@ interface Course {
   progress: number;
 }
 
-const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
-
 const getProgressColor = (progress: number) => {
   if (progress >= 80) return "bg-green-100 text-green-700";
   if (progress >= 50) return "bg-amber-100 text-amber-700";
@@ -19,6 +18,7 @@ const getProgressColor = (progress: number) => {
 };
 
 const ProfessorMyCourses: React.FC = () => {
+  const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -33,14 +33,15 @@ const ProfessorMyCourses: React.FC = () => {
   const [progressFilter, setProgressFilter] = useState<'all' | 'high' | 'mid' | 'low'>('all');
 
   const fetchCourses = () => {
+    if (!user?.id) return;
     setLoading(true);
-    fetch(`/api/professor/courses?professorId=${PROFESSOR_ID}`)
+    fetch(`/api/professor/courses?professorId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setCourses(data))
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchCourses(); }, []);
+  useEffect(() => { fetchCourses(); }, [user?.id]);
 
   // Toast auto-hide
   useEffect(() => {

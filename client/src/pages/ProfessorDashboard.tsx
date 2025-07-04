@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { BookOpen, Users, Clock, TrendingUp, Calculator, Atom, Plus, Edit, Trash
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
+// L'ID du professeur sera récupéré dynamiquement depuis le contexte d'authentification
 
 // Types explicites pour chaque entité
 interface Course {
@@ -53,6 +54,7 @@ interface Submission {
 
 const ProfessorDashboard: React.FC = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
@@ -72,13 +74,15 @@ const ProfessorDashboard: React.FC = () => {
   const [progressFilter, setProgressFilter] = useState<'all' | 'high' | 'mid' | 'low'>('all');
 
   useEffect(() => {
+    if (!user?.id) return; // Attendre que l'utilisateur soit chargé
+    
     async function fetchData() {
       setLoading(true);
       const [coursesRes, studentsRes, assignmentsRes, gradesRes] = await Promise.all([
-        fetch(`/api/professor/courses?professorId=${PROFESSOR_ID}`),
-        fetch(`/api/professor/students?professorId=${PROFESSOR_ID}`),
-        fetch(`/api/professor/assignments?professorId=${PROFESSOR_ID}`),
-        fetch(`/api/professor/grades?professorId=${PROFESSOR_ID}`),
+        fetch(`/api/professor/courses?professorId=${user?.id}`),
+        fetch(`/api/professor/students?professorId=${user?.id}`),
+        fetch(`/api/professor/assignments?professorId=${user?.id}`),
+        fetch(`/api/professor/grades?professorId=${user?.id}`),
       ]);
       setCourses(await coursesRes.json());
       setStudents(await studentsRes.json());
@@ -89,7 +93,7 @@ const ProfessorDashboard: React.FC = () => {
       setLoading(false);
     }
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   // Toast auto-hide
   useEffect(() => {
@@ -199,7 +203,8 @@ const ProfessorDashboard: React.FC = () => {
   };
 
   const fetchCourses = () => {
-    fetch(`/api/professor/courses?professorId=${PROFESSOR_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/professor/courses?professorId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setCourses(data));
   };

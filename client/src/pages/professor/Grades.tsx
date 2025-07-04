@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import { Award, BookOpen, PlusCircle, Edit, Trash2, XCircle } from "lucide-react";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -14,8 +15,6 @@ interface GradesData {
   subjects: SubjectGrade[];
 }
 
-const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
-
 const getGradeColor = (grade: number) => {
   if (grade >= 15) return "bg-green-100 text-green-700";
   if (grade >= 10) return "bg-amber-100 text-amber-700";
@@ -23,6 +22,7 @@ const getGradeColor = (grade: number) => {
 };
 
 const ProfessorGrades = () => {
+  const { user } = useAuth();
   const [grades, setGrades] = useState<GradesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -37,14 +37,15 @@ const ProfessorGrades = () => {
   const [gradeFilter, setGradeFilter] = useState<'all' | 'high' | 'mid' | 'low'>('all');
 
   const fetchGrades = () => {
+    if (!user?.id) return;
     setLoading(true);
-    fetch(`/api/professor/grades?professorId=${PROFESSOR_ID}`)
+    fetch(`/api/professor/grades?professorId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setGrades(data))
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchGrades(); }, []);
+  useEffect(() => { fetchGrades(); }, [user?.id]);
 
   // Toast auto-hide
   useEffect(() => {
