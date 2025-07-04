@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/lib/i18n';
 import CalendarLib from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { CalendarDays, Clock, BookOpen, AlertCircle, PlusCircle, XCircle, Filter } from "lucide-react";
@@ -27,6 +28,7 @@ function formatDate(date: Date) {
 
 const ProfessorCalendar: React.FC = () => {
   const { user } = useAuth();
+  const { t, language } = useLanguage();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -83,30 +85,30 @@ const ProfessorCalendar: React.FC = () => {
   const weekEvents = weekDates.flatMap(d => eventsByDate[d] || []);
 
   return (
-    <div className="p-6 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+    <div className="p-6 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950" dir={language === 'ar' ? 'rtl' : 'ltr'} lang={language}>
       <div className="flex items-center gap-3 mb-8">
-        <CalendarDays className="w-10 h-10 text-blue-400 dark:text-blue-200" aria-label="Icône calendrier" />
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Calendrier professeur</h1>
+        <CalendarDays className="w-10 h-10 text-blue-400 dark:text-blue-200" aria-label={t('professor.calendarIconAria')} />
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t('professor.calendarTitle')}</h1>
         <button
           className="ml-auto flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-semibold shadow hover:bg-blue-200 dark:hover:bg-blue-800 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
-          aria-label="Ajouter un événement"
+          aria-label={t('professor.addEventAria')}
           onClick={() => setShowAddModal(true)}
         >
           <PlusCircle className="w-5 h-5" />
-          <span>Ajouter un événement</span>
+          <span>{t('professor.addEvent')}</span>
         </button>
       </div>
       {/* Filtres et vue */}
       <div className="flex flex-wrap gap-2 mb-6 items-center">
         <Filter className="w-5 h-5 text-blue-400" />
-        <button onClick={() => setFilterType('all')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='all' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200'} transition`}>Tous</button>
-        <button onClick={() => setFilterType('correction')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='correction' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-blue-700 dark:bg-gray-800 dark:text-blue-300'} transition`}>Corrections</button>
-        <button onClick={() => setFilterType('meeting')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='meeting' ? 'bg-green-500 text-white' : 'bg-gray-100 text-green-700 dark:bg-gray-800 dark:text-green-300'} transition`}>Réunions</button>
-        <button onClick={() => setFilterType('exam')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='exam' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-orange-700 dark:bg-gray-800 dark:text-orange-300'} transition`}>Examens</button>
-        <button onClick={() => setFilterType('event')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='event' ? 'bg-purple-500 text-white' : 'bg-gray-100 text-purple-700 dark:bg-gray-800 dark:text-purple-300'} transition`}>Autres</button>
-        <span className="ml-4 font-semibold text-xs text-gray-500">Vue :</span>
-        <button onClick={() => setViewMode('month')} className={`px-3 py-1 rounded-full font-semibold text-xs ${viewMode==='month' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-blue-700 dark:bg-gray-800 dark:text-blue-300'} transition`}>Mois</button>
-        <button onClick={() => setViewMode('week')} className={`px-3 py-1 rounded-full font-semibold text-xs ${viewMode==='week' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-blue-700 dark:bg-gray-800 dark:text-blue-300'} transition`}>Semaine</button>
+        <button onClick={() => setFilterType('all')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='all' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200'} transition`}>{t('professor.filter.all')}</button>
+        <button onClick={() => setFilterType('correction')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='correction' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-blue-700 dark:bg-gray-800 dark:text-blue-300'} transition`}>{t('professor.filter.correction')}</button>
+        <button onClick={() => setFilterType('meeting')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='meeting' ? 'bg-green-500 text-white' : 'bg-gray-100 text-green-700 dark:bg-gray-800 dark:text-green-300'} transition`}>{t('professor.filter.meeting')}</button>
+        <button onClick={() => setFilterType('exam')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='exam' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-orange-700 dark:bg-gray-800 dark:text-orange-300'} transition`}>{t('professor.filter.exam')}</button>
+        <button onClick={() => setFilterType('event')} className={`px-3 py-1 rounded-full font-semibold text-xs ${filterType==='event' ? 'bg-purple-500 text-white' : 'bg-gray-100 text-purple-700 dark:bg-gray-800 dark:text-purple-300'} transition`}>{t('professor.filter.event')}</button>
+        <span className="ml-4 font-semibold text-xs text-gray-500">{t('professor.view')} :</span>
+        <button onClick={() => setViewMode('month')} className={`px-3 py-1 rounded-full font-semibold text-xs ${viewMode==='month' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-blue-700 dark:bg-gray-800 dark:text-blue-300'} transition`}>{t('professor.month')}</button>
+        <button onClick={() => setViewMode('week')} className={`px-3 py-1 rounded-full font-semibold text-xs ${viewMode==='week' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-blue-700 dark:bg-gray-800 dark:text-blue-300'} transition`}>{t('professor.week')}</button>
       </div>
       {/* Affichage calendrier/mois ou semaine */}
       {viewMode === 'month' ? (
@@ -140,12 +142,13 @@ const ProfessorCalendar: React.FC = () => {
           <div className="flex-1">
             <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-2">
               <BookOpen className="w-6 h-6 text-blue-400" />
-              Événements du {selectedDate.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              {/* Use string interpolation for date in translation */}
+              {t('professor.dailyEvents') + ': ' + selectedDate.toLocaleDateString(language === 'ar' ? 'ar-MA' : language === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </h2>
             {selectedDayEvents.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10">
                 <AlertCircle className="w-12 h-12 text-blue-200 mb-2" />
-                <p className="text-lg text-gray-500">Aucun événement pour ce jour.</p>
+                <p className="text-lg text-gray-500">{t('professor.noEvents')}</p>
               </div>
             ) : (
               <ul className="space-y-4">
@@ -175,12 +178,12 @@ const ProfessorCalendar: React.FC = () => {
         <div className="bg-white/80 dark:bg-gray-900/80 rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-2">
             <BookOpen className="w-6 h-6 text-blue-400" />
-            Agenda de la semaine
+            {t('professor.weekAgenda')}
           </h2>
           {weekEvents.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10">
               <AlertCircle className="w-12 h-12 text-blue-200 mb-2" />
-              <p className="text-lg text-gray-500">Aucun événement cette semaine.</p>
+              <p className="text-lg text-gray-500">{t('professor.noEventsThisWeek')}</p>
             </div>
           ) : (
             <ul className="space-y-4">
@@ -227,7 +230,7 @@ const ProfessorCalendar: React.FC = () => {
               <XCircle className="w-7 h-7" />
             </button>
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <PlusCircle className="w-6 h-6 text-blue-400" /> {editEvent ? 'Modifier' : 'Ajouter'} un événement
+              <PlusCircle className="w-6 h-6 text-blue-400" /> {editEvent ? t('professor.editEvent') : t('professor.addEvent')}
             </h3>
             <form
               className="flex flex-col gap-4"
@@ -236,7 +239,7 @@ const ProfessorCalendar: React.FC = () => {
                 setAddError('');
                 setEditError('');
                 if (!(editEvent ? editForm.title : addForm.title).trim() || !(editEvent ? editForm.date : addForm.date) || !(editEvent ? editForm.time : addForm.time)) {
-                  editEvent ? setEditError('Titre, date et heure requis.') : setAddError('Titre, date et heure requis.');
+                  editEvent ? setEditError(t('professor.requiredFields')) : setAddError(t('professor.requiredFields'));
                   return;
                 }
                 if (editEvent) {
@@ -248,7 +251,7 @@ const ProfessorCalendar: React.FC = () => {
                       body: JSON.stringify(editForm)
                     });
                     if (!res.ok) throw new Error('Erreur API');
-                    setToast({ type: 'success', message: 'Événement modifié !' });
+                    setToast({ type: 'success', message: t('professor.eventUpdated') });
                     setEditEvent(null);
                     setEditForm(addForm);
                     // Refresh
@@ -258,8 +261,8 @@ const ProfessorCalendar: React.FC = () => {
                       .then((data) => setEvents(data))
                       .finally(() => setLoading(false));
                   } catch {
-                    setEditError('Erreur lors de la modification.');
-                    setToast({ type: 'error', message: 'Erreur lors de la modification.' });
+                    setEditError(t('professor.errorUpdating'));
+                    setToast({ type: 'error', message: t('professor.errorUpdating') });
                   } finally {
                     setEditLoading(false);
                   }
@@ -272,7 +275,7 @@ const ProfessorCalendar: React.FC = () => {
                       body: JSON.stringify(addForm)
                     });
                     if (!res.ok) throw new Error('Erreur API');
-                    setToast({ type: 'success', message: 'Événement ajouté !' });
+                    setToast({ type: 'success', message: t('professor.eventAdded') });
                     setShowAddModal(false);
                     setAddForm({ title: '', date: formatDate(new Date()), time: '', type: 'correction', description: '' });
                     // Refresh
@@ -282,8 +285,8 @@ const ProfessorCalendar: React.FC = () => {
                       .then((data) => setEvents(data))
                       .finally(() => setLoading(false));
                   } catch {
-                    setAddError('Erreur lors de l\'ajout.');
-                    setToast({ type: 'error', message: 'Erreur lors de l\'ajout.' });
+                    setAddError(t('professor.errorAdding'));
+                    setToast({ type: 'error', message: t('professor.errorAdding') });
                   } finally {
                     setAddLoading(false);
                   }
@@ -293,7 +296,7 @@ const ProfessorCalendar: React.FC = () => {
               <input
                 type="text"
                 className="input input-bordered rounded-lg px-4 py-2"
-                placeholder="Titre"
+                placeholder={t('professor.title')}
                 value={editEvent ? editForm.title : addForm.title}
                 onChange={e => editEvent ? setEditForm(f => ({ ...f, title: e.target.value })) : setAddForm(f => ({ ...f, title: e.target.value }))}
                 required
@@ -317,14 +320,14 @@ const ProfessorCalendar: React.FC = () => {
                 value={editEvent ? editForm.type : addForm.type}
                 onChange={e => editEvent ? setEditForm(f => ({ ...f, type: e.target.value })) : setAddForm(f => ({ ...f, type: e.target.value }))}
               >
-                <option value="correction">Correction</option>
-                <option value="meeting">Réunion</option>
-                <option value="exam">Examen</option>
-                <option value="event">Autre</option>
+                <option value="correction">{t('professor.correction')}</option>
+                <option value="meeting">{t('professor.meeting')}</option>
+                <option value="exam">{t('professor.exam')}</option>
+                <option value="event">{t('professor.other')}</option>
               </select>
               <textarea
                 className="textarea textarea-bordered rounded-lg px-4 py-2"
-                placeholder="Description (optionnel)"
+                placeholder={t('professor.descriptionOptional')}
                 value={editEvent ? editForm.description : addForm.description}
                 onChange={e => editEvent ? setEditForm(f => ({ ...f, description: e.target.value })) : setAddForm(f => ({ ...f, description: e.target.value }))}
               />
@@ -335,12 +338,12 @@ const ProfessorCalendar: React.FC = () => {
                   className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold shadow hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                   onClick={() => { setShowAddModal(false); setEditEvent(null); }}
                   disabled={addLoading || editLoading}
-                >Annuler</button>
+                >{t('professor.cancel')}</button>
                 <button
                   type="submit"
                   className="px-4 py-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-semibold shadow hover:bg-blue-200 dark:hover:bg-blue-800 transition"
                   disabled={addLoading || editLoading}
-                >{editEvent ? (editLoading ? 'Modification...' : 'Modifier') : (addLoading ? 'Ajout...' : 'Ajouter')}</button>
+                >{editEvent ? (editLoading ? t('professor.updating') : t('professor.update')) : (addLoading ? t('professor.adding') : t('professor.add'))}</button>
               </div>
             </form>
           </div>
@@ -373,7 +376,7 @@ const ProfessorCalendar: React.FC = () => {
               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${EVENT_COLORS[modalEvent.type || 'default']}`}>{modalEvent.type || 'Événement'}</span>
             </div>
             {modalEvent.date && (
-              <div className="mb-2 text-gray-500 text-sm">Date : {modalEvent.date}</div>
+              <div className="mb-2 text-gray-500 text-sm">{t('professor.date')}: {modalEvent.date}</div>
             )}
             {modalEvent.description && (
               <div className="mb-2 text-gray-700 dark:text-gray-200 text-sm">{modalEvent.description}</div>
@@ -387,7 +390,7 @@ const ProfessorCalendar: React.FC = () => {
                   try {
                     const res = await fetch(`/api/professor/calendar/${modalEvent.id}`, { method: 'DELETE' });
                     if (!res.ok) throw new Error('Erreur API');
-                    setToast({ type: 'success', message: 'Événement supprimé !' });
+                    setToast({ type: 'success', message: t('professor.eventDeleted') });
                     setModalEvent(null);
                     // Refresh
                     setLoading(true);
@@ -396,13 +399,13 @@ const ProfessorCalendar: React.FC = () => {
                       .then((data) => setEvents(data))
                       .finally(() => setLoading(false));
                   } catch {
-                    setToast({ type: 'error', message: 'Erreur lors de la suppression.' });
+                    setToast({ type: 'error', message: t('professor.errorDeleting') });
                   } finally {
                     setDeleteLoading(false);
                   }
                 }}
                 disabled={deleteLoading}
-              >{deleteLoading ? 'Suppression...' : 'Supprimer'}</button>
+              >{deleteLoading ? t('professor.deleting') : t('professor.delete')}</button>
               <button
                 className="px-4 py-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-semibold shadow hover:bg-blue-200 dark:hover:bg-blue-800 transition"
                 onClick={() => {
@@ -416,11 +419,11 @@ const ProfessorCalendar: React.FC = () => {
                   });
                   setModalEvent(null);
                 }}
-              >Modifier</button>
+              >{t('professor.edit')}</button>
               <button
                 className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold shadow hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                 onClick={() => setModalEvent(null)}
-              >Fermer</button>
+              >{t('professor.close')}</button>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { BookOpen, PlusCircle, Edit, Trash2, XCircle } from "lucide-react";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Course {
   id?: number | string;
@@ -19,6 +20,7 @@ const getProgressColor = (progress: number) => {
 
 const ProfessorMyCourses: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -134,41 +136,41 @@ const ProfessorMyCourses: React.FC = () => {
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text('Liste des cours', 14, 18);
+    doc.text(t('professor.coursesPdfTitle'), 14, 18);
     autoTable(doc, {
       startY: 28,
-      head: [['Titre', 'Professeur', 'Progression']],
+      head: [[t('professor.coursesTable.title'), t('professor.coursesTable.professor'), t('professor.coursesTable.progress')]],
       body: filteredCourses.map(c => [c.title, c.professor, `${c.progress}%`]),
       theme: 'striped',
       headStyles: { fillColor: [59, 130, 246] },
       styles: { fontSize: 12 },
     });
-    doc.save('cours.pdf');
+    doc.save(t('professor.coursesPdfFile'));
   };
 
   return (
     <div className="p-6 w-full h-full flex flex-col">
-      <h1 className="text-3xl font-extrabold tracking-tight mb-6">Courses</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('professor.myCourses')}</h1>
       <div className="overflow-x-auto rounded-lg shadow bg-white dark:bg-gray-800">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
-              <th className="p-3 text-left font-semibold">Title</th>
-              <th className="p-3 text-left font-semibold">Professor</th>
-              <th className="p-3 text-left font-semibold">Progress</th>
+              <th className="p-3 text-left font-semibold">{t('professor.coursesTable.title')}</th>
+              <th className="p-3 text-left font-semibold">{t('professor.coursesTable.professor')}</th>
+              <th className="p-3 text-left font-semibold">{t('professor.coursesTable.progress')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
             {loading ? (
               <tr>
                 <td colSpan={3} className="p-4 text-center">
-                  Loading...
+                  {t('common.loading')}
                 </td>
               </tr>
             ) : courses.length === 0 ? (
               <tr>
                 <td colSpan={3} className="p-4 text-center">
-                  No courses found.
+                  {t('professor.noCoursesFound')}
                 </td>
               </tr>
             ) : (

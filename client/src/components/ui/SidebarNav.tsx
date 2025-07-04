@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   SidebarContent,
   SidebarFooter,
@@ -25,6 +26,7 @@ export default function SidebarNav() {
   const [location] = useLocation();
   const { user } = useAuth();
   const { state } = useSidebar();
+  const { t, language } = useLanguage();
 
   const link = (to: string) => location === to;
 
@@ -38,29 +40,29 @@ export default function SidebarNav() {
   // Combine all menu items with their roles
   const allMenu: MenuItem[] = [
     // Admin
-    { to: "/admin", icon: <Home />, label: "Dashboard", role: "admin" },
-    { to: "/admin/users", icon: <Users />, label: "Users", role: "admin" },
-    { to: "/admin/courses", icon: <BookOpen />, label: "Courses", role: "admin" },
-    { to: "/admin/analytics", icon: <BarChart2 />, label: "Analytics", role: "admin" },
-    { to: "/admin/calendar", icon: <Calendar />, label: "Calendar", role: "admin" },
-    { to: "/admin/announcements", icon: <ClipboardList />, label: "Announcements", role: "admin" },
-    { to: "/admin/notifications", icon: <Bell />, label: "Notifications", role: "admin" },
-    { to: "/admin/reports", icon: <ClipboardList />, label: "Reports", role: "admin" },
+    { to: "/admin", icon: <Home />, label: t("navigation.dashboard"), role: "admin" },
+    { to: "/admin/users", icon: <Users />, label: t("navigation.users"), role: "admin" },
+    { to: "/admin/courses", icon: <BookOpen />, label: t("navigation.courses"), role: "admin" },
+    { to: "/admin/analytics", icon: <BarChart2 />, label: t("navigation.analytics"), role: "admin" },
+    { to: "/admin/calendar", icon: <Calendar />, label: t("navigation.calendar"), role: "admin" },
+    { to: "/admin/announcements", icon: <ClipboardList />, label: t("admin.announcements"), role: "admin" },
+    { to: "/admin/notifications", icon: <Bell />, label: t("navigation.notifications"), role: "admin" },
+    { to: "/admin/reports", icon: <ClipboardList />, label: t("navigation.reports"), role: "admin" },
     // Professor
-    { to: "/professor", icon: <Home />, label: "Dashboard", role: "professor" },
-    { to: "/professor/courses", icon: <BookOpen />, label: "My Courses", role: "professor" },
-    { to: "/professor/assignments", icon: <ClipboardList />, label: "Assignments", role: "professor" },
-    { to: "/professor/grades", icon: <BarChart2 />, label: "Grades", role: "professor" },
-    { to: "/professor/calendar", icon: <Calendar />, label: "Calendar", role: "professor" },
-    { to: "/professor/notifications", icon: <Bell />, label: "Notifications", role: "professor" },
-    { to: "/professor/students", icon: <User />, label: "Students", role: "professor" },
+    { to: "/professor", icon: <Home />, label: t("navigation.dashboard"), role: "professor" },
+    { to: "/professor/courses", icon: <BookOpen />, label: t("professor.myCourses"), role: "professor" },
+    { to: "/professor/assignments", icon: <ClipboardList />, label: t("professor.assignments"), role: "professor" },
+    { to: "/professor/grades", icon: <BarChart2 />, label: t("professor.gradebook"), role: "professor" },
+    { to: "/professor/calendar", icon: <Calendar />, label: t("navigation.calendar"), role: "professor" },
+    { to: "/professor/notifications", icon: <Bell />, label: t("navigation.notifications"), role: "professor" },
+    { to: "/professor/students", icon: <User />, label: t("professor.students"), role: "professor" },
     // Student
-    { to: "/student", icon: <Home />, label: "Dashboard", role: "student" },
-    { to: "/student/courses", icon: <BookOpen />, label: "My Courses", role: "student" },
-    { to: "/student/assignments", icon: <ClipboardList />, label: "Assignments", role: "student" },
-    { to: "/student/grades", icon: <BarChart2 />, label: "Grades", role: "student" },
-    { to: "/student/calendar", icon: <Calendar />, label: "Calendar", role: "student" },
-    { to: "/student/notifications", icon: <Bell />, label: "Notifications", role: "student" },
+    { to: "/student", icon: <Home />, label: t("navigation.dashboard"), role: "student" },
+    { to: "/student/courses", icon: <BookOpen />, label: t("student.myCourses"), role: "student" },
+    { to: "/student/assignments", icon: <ClipboardList />, label: t("student.assignments"), role: "student" },
+    { to: "/student/grades", icon: <BarChart2 />, label: t("student.grades"), role: "student" },
+    { to: "/student/calendar", icon: <Calendar />, label: t("navigation.calendar"), role: "student" },
+    { to: "/student/notifications", icon: <Bell />, label: t("navigation.notifications"), role: "student" },
   ];
 
   let menu: MenuItem[] = [];

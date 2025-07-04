@@ -598,7 +598,7 @@ const SidebarMenuButton = React.forwardRef<
 
     // Push icon to the absolute left in collapsed mode
     const collapsedClasses = state === 'collapsed'
-      ? `bg-white dark:bg-blue-950 h-[3.5rem] min-h-[56px] flex items-center justify-start p-0 text-blue-700 dark:text-blue-100 ${sidebarWidth}`
+      ? `bg-white dark:bg-blue-950 h-[3.5rem] min-h-[56px] flex items-center justify-start p-0 text-blue-700 dark:text-blue-100 ${sidebarWidth} !pl-0 !ml-0` // <-- force no left padding/margin
       : '';
 
     const button = (
@@ -613,13 +613,14 @@ const SidebarMenuButton = React.forwardRef<
           isActive && 'scale-110 text-primary animate-pulse',
           collapsedClasses,
           state === 'collapsed' && '!text-blue-700 dark:!text-blue-100',
+          state === 'collapsed' && '!justify-start !items-center !pl-0 !ml-0 !w-full !min-w-0 !gap-0' // force full width, no gap, no padding
         )}
-        style={state === 'collapsed' ? { fontSize: iconSize, justifyContent: 'flex-start', textAlign: 'left' } : {}}
+        style={state === 'collapsed' ? { fontSize: iconSize, justifyContent: 'flex-start', textAlign: 'left', paddingLeft: 0, marginLeft: 0, width: '100%', minWidth: 0, gap: 0 } : {}}
         {...props}
       >
         {/* Icon always absolutely left-aligned in collapsed mode */}
         {state === 'collapsed' ? (
-          <span className="flex items-center ml-0 mr-auto pl-0">
+          <span className="flex items-center ml-0 mr-0 pl-0 w-full justify-start !justify-start !ml-0 !pl-0 !mr-0">
             {/* Only render the first child (icon) in collapsed mode */}
             {Array.isArray(children) ? children[0] : children}
           </span>

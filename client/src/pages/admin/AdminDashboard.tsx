@@ -115,10 +115,10 @@ const AdminDashboard: React.FC = () => {
   }
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center text-xl text-gray-500 animate-pulse">Chargement du tableau de bord...</div>;
+    return <div className="flex min-h-screen items-center justify-center text-xl text-gray-500 animate-pulse">{t('admin.loadingDashboard')}</div>;
   }
   if (error) {
-    return <div className="flex min-h-screen items-center justify-center text-xl text-red-500">{error}</div>;
+    return <div className="flex min-h-screen items-center justify-center text-xl text-red-500">{t('admin.errorLoadingStats')}</div>;
   }
 
   return (
@@ -131,7 +131,7 @@ const AdminDashboard: React.FC = () => {
               <svg width='32' height='32' fill='none' viewBox='0 0 24 24' stroke='currentColor' className='text-blue-500'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 4v16m8-8H4'/></svg>
               {t('admin.dashboard')}
             </h1>
-            <p className="text-muted-foreground text-base">لوحة قيادة النظام المدرسي المغربي - Moroccan School Management System</p>
+            <p className="text-muted-foreground text-base">{t('admin.dashboardSubtitle')}</p>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="flex items-center gap-1 px-3 py-2 rounded-full text-base font-semibold bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 border-0">
@@ -143,12 +143,12 @@ const AdminDashboard: React.FC = () => {
 
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid w-full grid-cols-6 rounded-2xl bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 mb-6">
-            <TabsTrigger value="overview" className="rounded-xl">📊 Overview</TabsTrigger>
-            <TabsTrigger value="students" className="rounded-xl">👨‍🎓 Students</TabsTrigger>
-            <TabsTrigger value="grades" className="rounded-xl">📝 Grades</TabsTrigger>
-            <TabsTrigger value="attendance" className="rounded-xl">📅 Attendance</TabsTrigger>
-            <TabsTrigger value="exports" className="rounded-xl">📤 Exports</TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-xl">⚙️ Settings</TabsTrigger>
+            <TabsTrigger value="overview" className="rounded-xl">📊 {t('admin.tabs.overview')}</TabsTrigger>
+            <TabsTrigger value="students" className="rounded-xl">👨‍🎓 {t('admin.tabs.students')}</TabsTrigger>
+            <TabsTrigger value="grades" className="rounded-xl">📝 {t('admin.tabs.grades')}</TabsTrigger>
+            <TabsTrigger value="attendance" className="rounded-xl">📅 {t('admin.tabs.attendance')}</TabsTrigger>
+            <TabsTrigger value="exports" className="rounded-xl">📤 {t('admin.tabs.exports')}</TabsTrigger>
+            <TabsTrigger value="settings" className="rounded-xl">⚙️ {t('admin.tabs.settings')}</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -158,47 +158,47 @@ const AdminDashboard: React.FC = () => {
               {/* KPI Card Example */}
               <Card className="rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-green-50 to-white dark:from-green-900 dark:to-gray-900">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Bac Pass Rate</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('admin.kpi.bacPassRate')}</CardTitle>
                   <TrendingUp className="h-4 w-4 text-green-600" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-extrabold text-green-600">{kpis.bacPassRate}%</div>
                   <Progress value={kpis.bacPassRate} className="mt-2" />
-                  <p className="text-xs text-muted-foreground mt-1">معدل نجاح البكالوريا</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('admin.kpi.bacPassRateAr')}</p>
                 </CardContent>
               </Card>
               <Card className="rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-orange-50 to-white dark:from-orange-900 dark:to-gray-900">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Redoublement Rate</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('admin.kpi.redoublementRate')}</CardTitle>
                   <AlertCircle className="h-4 w-4 text-orange-600" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-extrabold text-orange-600">{kpis.redoublementRate}%</div>
                   <Progress value={kpis.redoublementRate} className="mt-2" />
-                  <p className="text-xs text-muted-foreground mt-1">معدل الإعادة</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('admin.kpi.redoublementRateAr')}</p>
                 </CardContent>
               </Card>
               <Card className="rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900 dark:to-gray-900">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Scholarship Spending</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('admin.kpi.scholarshipSpending')}</CardTitle>
                   <DollarSign className="h-4 w-4 text-blue-600" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-extrabold text-blue-600">
                     {kpis.scholarshipSpending.toLocaleString()} MAD
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">إنفاق المنح الدراسية</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('admin.kpi.scholarshipSpendingAr')}</p>
                 </CardContent>
               </Card>
               <Card className="rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-purple-50 to-white dark:from-purple-900 dark:to-gray-900">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Conduct Average</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('admin.kpi.conductAverage')}</CardTitle>
                   <Award className="h-4 w-4 text-purple-600" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-extrabold text-purple-600">{kpis.conductAverage}/20</div>
                   <Progress value={(kpis.conductAverage / 20) * 100} className="mt-2" />
-                  <p className="text-xs text-muted-foreground mt-1">متوسط درجة السلوك</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('admin.kpi.conductAverageAr')}</p>
                 </CardContent>
               </Card>
             </div>
@@ -211,7 +211,7 @@ const AdminDashboard: React.FC = () => {
                     <Users className="h-5 w-5" />
                     {t('admin.userManagement')}
                   </CardTitle>
-                  <CardDescription>إدارة الطلاب والأساتذة - Student & Teacher Management</CardDescription>
+                  <CardDescription>{t('admin.userManagementDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button 
@@ -219,10 +219,10 @@ const AdminDashboard: React.FC = () => {
                     className="w-full mb-2 rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
-                    Add New Student
+                    {t('admin.addNewStudent')}
                   </Button>
                   <div className="text-sm text-muted-foreground">
-                    Total Students: {kpis.totalStudents.toLocaleString()}
+                    {t('admin.totalStudents')}: {kpis.totalStudents.toLocaleString()}
                   </div>
                 </CardContent>
               </Card>
@@ -230,17 +230,17 @@ const AdminDashboard: React.FC = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <BookOpen className="h-5 w-5" />
-                    Course Management
+                    {t('admin.courseManagement')}
                   </CardTitle>
-                  <CardDescription>إدارة المناهج والمقررات - Curriculum & Courses</CardDescription>
+                  <CardDescription>{t('admin.courseManagementDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button variant="outline" className="w-full mb-2 rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform">
                     <Calendar className="h-4 w-4 mr-2" />
-                    Moroccan Schedule
+                    {t('admin.moroccanSchedule')}
                   </Button>
                   <div className="text-sm text-muted-foreground">
-                    Active Courses: {kpis.activeCourses}
+                    {t('admin.activeCourses')}: {kpis.activeCourses}
                   </div>
                 </CardContent>
               </Card>
@@ -248,17 +248,17 @@ const AdminDashboard: React.FC = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FileText className="h-5 w-5" />
-                    Reports & Exports
+                    {t('admin.reportsExports')}
                   </CardTitle>
-                  <CardDescription>تقارير وزارية - Ministry Reports</CardDescription>
+                  <CardDescription>{t('admin.reportsExportsDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button variant="outline" className="w-full mb-2 rounded-full flex items-center gap-2 shadow hover:scale-105 transition-transform">
                     <Download className="h-4 w-4 mr-2" />
-                    Ministry Export
+                    {t('admin.ministryExport')}
                   </Button>
                   <div className="text-sm text-muted-foreground">
-                    Latest export: Today
+                    {t('admin.latestExport')}: {t('admin.today')}
                   </div>
                 </CardContent>
               </Card>

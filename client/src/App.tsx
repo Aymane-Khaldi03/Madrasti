@@ -228,6 +228,8 @@ function Router() {
   );
 }
 
+import LanguageDirectionWrapper from "@/components/LanguageDirectionWrapper";
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -235,8 +237,10 @@ function App() {
         <LanguageProvider>
           <AuthProvider>
             <TooltipProvider>
-              <Toaster />
-              <Router />
+              <LanguageDirectionWrapper>
+                <Toaster />
+                <Router />
+              </LanguageDirectionWrapper>
             </TooltipProvider>
           </AuthProvider>
         </LanguageProvider>

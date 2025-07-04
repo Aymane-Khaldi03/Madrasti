@@ -131,7 +131,7 @@ const StudentDashboard: React.FC = () => {
     },
   ];
 
-  if (loading) return <div className="p-10 text-center">Chargement...</div>;
+  if (loading) return <div className="p-10 text-center">{t('common.loading')}</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 p-0">
@@ -144,16 +144,14 @@ const StudentDashboard: React.FC = () => {
               {t('student.dashboard')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-lg mt-2">
-              {`Bon retour, `}
-              <span className="font-bold text-blue-700 dark:text-blue-300">{user?.name || 'Étudiant'}</span>
-              {` ! Voici votre espace étudiant.`}
+              {t('student.welcome')}
             </p>
           </div>
           <div className="flex gap-3">
             <Button
               variant="default"
               className="flex items-center gap-2 shadow-md"
-              aria-label="Télécharger le relevé de notes"
+              aria-label={t('student.downloadTranscriptAria')}
               asChild
             >
               <a
@@ -162,16 +160,16 @@ const StudentDashboard: React.FC = () => {
                 rel="noopener noreferrer"
                 download
               >
-                <Download className="h-4 w-4" /> Relevé de notes
+                <Download className="h-4 w-4" /> {t('student.downloadTranscript')}
               </a>
             </Button>
             <Button
               variant="secondary"
               className="flex items-center gap-2"
-              aria-label="Contact conseiller"
+              aria-label={t('student.contactAdvisorAria')}
               onClick={() => setShowContact(true)}
             >
-              <Mail className="h-4 w-4" /> Contact
+              <Mail className="h-4 w-4" /> {t('student.contact')}
             </Button>
           </div>
         </div>
@@ -182,13 +180,13 @@ const StudentDashboard: React.FC = () => {
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 w-full max-w-sm relative animate-fade-in">
               <button
                 className="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold"
-                aria-label="Fermer"
+                aria-label={t('common.close')}
                 onClick={() => setShowContact(false)}
               >
                 ×
               </button>
               <h2 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300 flex items-center gap-2">
-                <Mail className="h-5 w-5" /> Conseiller / Administration
+                <Mail className="h-5 w-5" /> {t('student.advisor')}
               </h2>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -264,12 +262,12 @@ const StudentDashboard: React.FC = () => {
                       {item.dueDate || item.grade || '--'}
                     </Badge>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {item.status === 'pending' || item.status === 'En attente' ? 'En attente' : 'Terminé'}
+                      {item.status === 'pending' || item.status === 'En attente' ? t('student.pending') : t('student.completed')}
                     </p>
                   </div>
                 </div>
               ))}
-              <Button variant="ghost" className="w-full mt-2" aria-label="Voir tous les devoirs">Voir tous les devoirs</Button>
+              <Button variant="ghost" className="w-full mt-2" aria-label={t('student.viewAllAssignmentsAria')}>{t('student.viewAllAssignments')}</Button>
             </CardContent>
           </Card>
 
@@ -296,14 +294,14 @@ const StudentDashboard: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <Button variant="ghost" className="w-full mt-2" aria-label="Voir tous les modules">Voir tous les modules</Button>
+              <Button variant="ghost" className="w-full mt-2" aria-label={t('student.viewAllCoursesAria')}>{t('student.viewAllCourses')}</Button>
             </CardContent>
           </Card>
 
           {/* Events */}
           <Card className="lg:col-span-1 bg-white/90 dark:bg-gray-900/80 border-0">
             <CardHeader>
-              <CardTitle>Événements à venir</CardTitle>
+              <CardTitle>{t('student.upcomingEvents')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {events.slice(0, 3).map((event, idx) => (

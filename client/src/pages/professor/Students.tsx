@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Student {
   id: string;
@@ -10,6 +11,7 @@ interface Student {
 
 const ProfessorStudents: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -31,10 +33,10 @@ const ProfessorStudents: React.FC = () => {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h1 className="text-3xl font-extrabold tracking-tight">Students</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight">{t('professor.students')}</h1>
         <input
           className="border rounded px-3 py-2 w-full sm:w-64 focus:outline-none focus:ring focus:border-blue-400"
-          placeholder="Search by name or email..."
+          placeholder={t('professor.studentsSearchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -43,23 +45,23 @@ const ProfessorStudents: React.FC = () => {
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
-              <th className="p-3 text-left font-semibold">Avatar</th>
-              <th className="p-3 text-left font-semibold">Name</th>
-              <th className="p-3 text-left font-semibold">Email</th>
-              <th className="p-3 text-left font-semibold">Enrolled Courses</th>
+              <th className="p-3 text-left font-semibold">{t('professor.studentsTable.avatar')}</th>
+              <th className="p-3 text-left font-semibold">{t('professor.studentsTable.name')}</th>
+              <th className="p-3 text-left font-semibold">{t('professor.studentsTable.email')}</th>
+              <th className="p-3 text-left font-semibold">{t('professor.studentsTable.enrolledCourses')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
             {loading ? (
               <tr>
                 <td colSpan={4} className="p-4 text-center">
-                  Loading...
+                  {t('common.loading')}
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
                 <td colSpan={4} className="p-4 text-center">
-                  No students found.
+                  {t('professor.noStudentsFound')}
                 </td>
               </tr>
             ) : (
@@ -77,12 +79,8 @@ const ProfessorStudents: React.FC = () => {
                     </div>
                   </td>
                   <td className="p-3 font-medium">{student.name}</td>
-                  <td className="p-3 text-blue-700 dark:text-blue-300">
-                    {student.email}
-                  </td>
-                  <td className="p-3 text-sm">
-                    {student.enrolledCourses.join(", ")}
-                  </td>
+                  <td className="p-3 text-blue-700 dark:text-blue-300">{student.email}</td>
+                  <td className="p-3 text-sm">{student.enrolledCourses.join(", ")}</td>
                 </tr>
               ))
             )}
