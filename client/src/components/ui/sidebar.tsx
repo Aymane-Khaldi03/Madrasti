@@ -199,13 +199,13 @@ const Sidebar = React.forwardRef<
           {...props}
         >
           <div className="flex items-center gap-2 mb-8 px-2">
-            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
             <span className="text-2xl font-extrabold text-white tracking-tight">EduSphere</span>
           </div>
           <Separator className="bg-blue-800/40 mb-6" />
           <nav className="flex flex-col gap-2 flex-1">
             <a href="/admin" className="flex items-center gap-3 px-4 py-2 rounded-xl text-white font-semibold bg-blue-700/80 hover:bg-blue-600/90 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400">
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className=""><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"/></svg>
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className=""><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" /></svg>
               Tableau de bord
             </a>
           </nav>
@@ -299,9 +299,17 @@ const Sidebar = React.forwardRef<
             data-sidebar="sidebar"
             className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
           >
-            <aside className={`fixed top-0 left-0 z-40 h-full transition-transform duration-300 md:static md:translate-x-0 ${openMobile ? 'translate-x-0' : '-translate-x-full'} w-[--sidebar-width] ${SIDEBAR_GRADIENT} shadow-2xl rounded-r-3xl py-6 px-3 border-r border-blue-950/30`}>
+            <aside
+              className={`fixed top-0 left-0 z-40 h-full transition-all duration-300
+              md:static md:translate-x-0 ${openMobile ? 'translate-x-0' : '-translate-x-full'}
+              w-[--sidebar-width] group-data-[collapsible=icon]:w-[--sidebar-width-icon]
+              overflow-hidden                      /* hides spill-over when collapsed */
+              ${SIDEBAR_GRADIENT}
+              shadow-2xl rounded-r-3xl py-6 px-3 border-r border-blue-950/30`}
+            >
               {children}
             </aside>
+
             <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm md:hidden animate-fade-in" onClick={() => setOpenMobile(false)} aria-label="Fermer le menu" tabIndex={0}></div>
           </div>
         </div>
@@ -671,7 +679,7 @@ const SidebarMenuAction = React.forwardRef<
         "peer-data-[size=lg]/menu-button:top-2.5",
         "group-data-[collapsible=icon]:hidden",
         showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
         className
       )}
       {...props}

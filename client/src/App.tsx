@@ -7,7 +7,6 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Header from "@/components/Layout/Header";
-import Sidebar from "@/components/Layout/Sidebar";
 import ProtectedRoute from "@/components/Auth/ProtectedRoute";
 import LandingPage from "@/pages/LandingPage";
 import StudentDashboard from "@/pages/student/StudentDashboard";
@@ -33,184 +32,200 @@ import ProfessorMyCourses from "@/pages/professor/MyCourses";
 import ProfessorCalendar from "@/pages/professor/Calendar";
 import ProfessorNotifications from "@/pages/professor/Notifications";
 import ProfessorStudents from "@/pages/professor/Students";
-
+import { SidebarProvider, Sidebar, SidebarInset } from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 import React, { useState } from "react";
-
+import { useEffect } from "react";
+import SidebarNav from "@/components/ui/SidebarNav";   //  ←  add import at the top
 function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
+
+  // Sync when viewport switches size
+  useEffect(() => setSidebarOpen(!isMobile), [isMobile]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className="flex">
-        {user && <Sidebar />}
-        <main className="flex-1">
-          {children}
-        </main>
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+        <Header /> {/* uses SidebarTrigger internally */}
+        <div className="flex flex-1 overflow-hidden">
+          <Sidebar
+            side="left"
+            variant="sidebar"
+            collapsible={isMobile ? "offcanvas" : "icon"}
+          >
+            <SidebarNav />          {/*  NEW – adds the items */}
+          </Sidebar>
+          <SidebarInset className="p-4 md:p-8 overflow-y-auto flex-1">
+            {children}
+          </SidebarInset>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
 
+
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={LandingPage} />
-      {/* Student dashboard */}
-      <Route path="/student">
-        <ProtectedRoute requiredRole="student">
-          <DashboardLayout>
-            <StudentDashboard />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      {/* Student pages */}
-      <Route path="/student/assignments">
-        <ProtectedRoute requiredRole="student">
-          <DashboardLayout>
-            <Assignments />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/student/grades">
-        <ProtectedRoute requiredRole="student">
-          <DashboardLayout>
-            <Grades />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/student/courses">
-        <ProtectedRoute requiredRole="student">
-          <DashboardLayout>
-            <MyCourses />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/student/calendar">
-        <ProtectedRoute requiredRole="student">
-          <DashboardLayout>
-            <Calendar />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/student/notifications">
-        <ProtectedRoute requiredRole="student">
-          <DashboardLayout>
-            <Notifications />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      {/* Professor dashboard */}
-      <Route path="/professor">
-        <ProtectedRoute requiredRole="professor">
-          <DashboardLayout>
-            <ProfessorDashboard />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      {/* Professor pages */}
-      <Route path="/professor/assignments">
-        <ProtectedRoute requiredRole="professor">
-          <DashboardLayout>
-            <ProfessorAssignments />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/professor/grades">
-        <ProtectedRoute requiredRole="professor">
-          <DashboardLayout>
-            <ProfessorGrades />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/professor/courses">
-        <ProtectedRoute requiredRole="professor">
-          <DashboardLayout>
-            <ProfessorMyCourses />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/professor/calendar">
-        <ProtectedRoute requiredRole="professor">
-          <DashboardLayout>
-            <ProfessorCalendar />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/professor/notifications">
-        <ProtectedRoute requiredRole="professor">
-          <DashboardLayout>
-            <ProfessorNotifications />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/professor/students">
-        <ProtectedRoute requiredRole="professor">
-          <DashboardLayout>
-            <ProfessorStudents />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      {/* Admin dashboard and pages */}
-      <Route path="/admin">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <AdminDashboard />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/admin/users">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <UsersPage />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/admin/courses">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <CoursesPage />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/admin/analytics">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <AnalyticsPage />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/admin/reports">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <ReportsPage />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/admin/announcements">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <AnnouncementsPage />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/admin/calendar">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <CalendarPage />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/admin/notifications">
-        <ProtectedRoute requiredRole="admin">
-          <DashboardLayout>
-            <NotificationsPage />
-          </DashboardLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <Switch>
+        <Route path="/" component={LandingPage} />
+        {/* Student dashboard */}
+        <Route path="/student">
+          <ProtectedRoute requiredRole="student">
+            <DashboardLayout>
+              <StudentDashboard />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        {/* Student pages */}
+        <Route path="/student/assignments">
+          <ProtectedRoute requiredRole="student">
+            <DashboardLayout>
+              <Assignments />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/student/grades">
+          <ProtectedRoute requiredRole="student">
+            <DashboardLayout>
+              <Grades />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/student/courses">
+          <ProtectedRoute requiredRole="student">
+            <DashboardLayout>
+              <MyCourses />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/student/calendar">
+          <ProtectedRoute requiredRole="student">
+            <DashboardLayout>
+              <Calendar />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/student/notifications">
+          <ProtectedRoute requiredRole="student">
+            <DashboardLayout>
+              <Notifications />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        {/* Professor dashboard */}
+        <Route path="/professor">
+          <ProtectedRoute requiredRole="professor">
+            <DashboardLayout>
+              <ProfessorDashboard />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        {/* Professor pages */}
+        <Route path="/professor/assignments">
+          <ProtectedRoute requiredRole="professor">
+            <DashboardLayout>
+              <ProfessorAssignments />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/professor/grades">
+          <ProtectedRoute requiredRole="professor">
+            <DashboardLayout>
+              <ProfessorGrades />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/professor/courses">
+          <ProtectedRoute requiredRole="professor">
+            <DashboardLayout>
+              <ProfessorMyCourses />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/professor/calendar">
+          <ProtectedRoute requiredRole="professor">
+            <DashboardLayout>
+              <ProfessorCalendar />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/professor/notifications">
+          <ProtectedRoute requiredRole="professor">
+            <DashboardLayout>
+              <ProfessorNotifications />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/professor/students">
+          <ProtectedRoute requiredRole="professor">
+            <DashboardLayout>
+              <ProfessorStudents />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        {/* Admin dashboard and pages */}
+        <Route path="/admin">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <AdminDashboard />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/users">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <UsersPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/courses">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <CoursesPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/analytics">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <AnalyticsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/reports">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <ReportsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/announcements">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <AnnouncementsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/calendar">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <CalendarPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/notifications">
+          <ProtectedRoute requiredRole="admin">
+            <DashboardLayout>
+              <NotificationsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        </Route>
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 
@@ -232,3 +247,4 @@ function App() {
 }
 
 export default App;
+
