@@ -34,6 +34,11 @@ import {
   createNotification
 } from './controllers/admin/notificationsController';
 import { checkAdminAuth } from './firebase-admin';
+import { getStudentAssignments } from './controllers/student/assignmentsController';
+import { getStudentGrades } from './controllers/student/gradesController';
+import { getStudentCourses } from './controllers/student/coursesController';
+import { getStudentEvents } from './controllers/student/calendarController';
+import { getStudentNotifications } from './controllers/student/notificationsController';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -261,6 +266,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to create notification" });
     }
   });
+
+  // --- STUDENT ROUTES ---
+  app.get('/api/student/assignments', getStudentAssignments);
+  app.get('/api/student/grades', getStudentGrades);
+  app.get('/api/student/courses', getStudentCourses);
+  app.get('/api/student/calendar', getStudentEvents);
+  app.get('/api/student/notifications', getStudentNotifications);
 
   // --- ADMIN ROUTES ---
   // Users

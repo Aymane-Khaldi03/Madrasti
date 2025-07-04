@@ -10,7 +10,12 @@ import Header from "@/components/Layout/Header";
 import Sidebar from "@/components/Layout/Sidebar";
 import ProtectedRoute from "@/components/Auth/ProtectedRoute";
 import LandingPage from "@/pages/LandingPage";
-import StudentDashboard from "@/pages/StudentDashboard";
+import StudentDashboard from "@/pages/student/StudentDashboard";
+import Assignments from "@/pages/student/Assignments";
+import Grades from "@/pages/student/Grades";
+import MyCourses from "@/pages/student/MyCourses";
+import Calendar from "@/pages/student/Calendar";
+import Notifications from "@/pages/student/Notifications";
 import ProfessorDashboard from "@/pages/ProfessorDashboard";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import NotFound from "@/pages/not-found";
@@ -25,7 +30,7 @@ import NotificationsPage from "@/pages/admin/notifications";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />
@@ -43,6 +48,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
+      {/* Student dashboard */}
       <Route path="/student">
         <ProtectedRoute requiredRole="student">
           <DashboardLayout>
@@ -50,6 +56,43 @@ function Router() {
           </DashboardLayout>
         </ProtectedRoute>
       </Route>
+      {/* Student pages */}
+      <Route path="/student/assignments">
+        <ProtectedRoute requiredRole="student">
+          <DashboardLayout>
+            <Assignments />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/student/grades">
+        <ProtectedRoute requiredRole="student">
+          <DashboardLayout>
+            <Grades />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/student/courses">
+        <ProtectedRoute requiredRole="student">
+          <DashboardLayout>
+            <MyCourses />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/student/calendar">
+        <ProtectedRoute requiredRole="student">
+          <DashboardLayout>
+            <Calendar />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/student/notifications">
+        <ProtectedRoute requiredRole="student">
+          <DashboardLayout>
+            <Notifications />
+          </DashboardLayout>
+        </ProtectedRoute>
+      </Route>
+      {/* Professor dashboard */}
       <Route path="/professor">
         <ProtectedRoute requiredRole="professor">
           <DashboardLayout>
@@ -57,6 +100,7 @@ function Router() {
           </DashboardLayout>
         </ProtectedRoute>
       </Route>
+      {/* Admin dashboard and pages */}
       <Route path="/admin">
         <ProtectedRoute requiredRole="admin">
           <DashboardLayout>
