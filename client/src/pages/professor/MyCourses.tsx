@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-type Course = {
+interface Course {
+  id?: number | string;
   title: string;
   professor: string;
   progress: number;
-};
+}
+
+const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
 
 const ProfessorMyCourses: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/professor/courses")
+    fetch(`/api/professor/courses?professorId=${PROFESSOR_ID}`)
       .then((res) => res.json())
       .then((data) => setCourses(data))
       .finally(() => setLoading(false));

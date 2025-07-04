@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-type Notification = {
+interface Notification {
+  id?: number | string;
   title: string;
   message: string;
   date: string;
   read?: boolean;
-};
+}
+
+const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
 
 const ProfessorNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/professor/notifications")
+    fetch(`/api/professor/notifications?professorId=${PROFESSOR_ID}`)
       .then((res) => res.json())
       .then((data) => setNotifications(data))
       .finally(() => setLoading(false));
@@ -38,7 +41,7 @@ const ProfessorNotifications = () => {
                 }`}
               >
                 <span className="inline-block w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                  514
+                  514
                 </span>
                 <div className="flex-1">
                   <div className="font-semibold">{n.title}</div>

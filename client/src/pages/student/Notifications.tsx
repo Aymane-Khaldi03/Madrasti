@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-type Notification = {
+interface Notification {
+  id?: number | string;
   title: string;
   message: string;
   date: string;
   read?: boolean;
-};
+}
+
+const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/student/notifications")
+    fetch(`/api/student/notifications?studentId=${STUDENT_ID}`)
       .then((res) => res.json())
       .then((data) => setNotifications(data))
       .finally(() => setLoading(false));

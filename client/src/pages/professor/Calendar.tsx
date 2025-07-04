@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-type Event = {
+interface Event {
+  id?: number | string;
   title: string;
   date: string;
   time: string;
-};
+}
+
+const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
 
 const ProfessorCalendar: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/professor/calendar")
+    fetch(`/api/professor/calendar?professorId=${PROFESSOR_ID}`)
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .finally(() => setLoading(false));
@@ -33,7 +36,7 @@ const ProfessorCalendar: React.FC = () => {
                 className="flex items-center gap-4 border-b last:border-b-0 pb-3"
               >
                 <span className="inline-block w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                  4C5
+                  4C5
                 </span>
                 <div className="flex-1">
                   <div className="font-semibold">{e.title}</div>

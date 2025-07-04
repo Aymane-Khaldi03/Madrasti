@@ -62,6 +62,12 @@ export interface IStorage {
   createNotification(notification: InsertNotification): Promise<Notification>;
   updateNotification(id: number, updates: Partial<InsertNotification>): Promise<Notification | undefined>;
   deleteNotification(id: number): Promise<boolean>;
+
+  // Grade methods
+  getAllGrades(): Promise<any[]>;
+
+  // Event methods
+  getAllEvents(): Promise<any[]>;
 }
 
 export class FirebaseStorage implements IStorage {
@@ -265,6 +271,18 @@ export class FirebaseStorage implements IStorage {
   async deleteNotification(id: number): Promise<boolean> {
     await this.notificationsCollection.doc(id.toString()).delete();
     return true;
+  }
+
+  // --- Grade methods ---
+  async getAllGrades(): Promise<any[]> {
+    const snapshot = await db.collection('grades').get();
+    return snapshot.docs.map((doc: any) => ({ id: Number(doc.id), ...doc.data() }));
+  }
+
+  // --- Event methods ---
+  async getAllEvents(): Promise<any[]> {
+    const snapshot = await db.collection('events').get();
+    return snapshot.docs.map((doc: any) => ({ id: Number(doc.id), ...doc.data() }));
   }
 
   // --- Helper for User mapping ---

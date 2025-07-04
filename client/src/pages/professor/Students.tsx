@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-type Student = {
+interface Student {
   id: string;
   name: string;
   email: string;
   enrolledCourses: string[];
-};
+}
+
+const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
 
 const ProfessorStudents: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
@@ -13,7 +15,7 @@ const ProfessorStudents: React.FC = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("/api/professor/students")
+    fetch(`/api/professor/students?professorId=${PROFESSOR_ID}`)
       .then((res) => res.json())
       .then((data) => setStudents(data))
       .finally(() => setLoading(false));

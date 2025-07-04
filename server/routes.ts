@@ -39,6 +39,12 @@ import { getStudentGrades } from './controllers/student/gradesController';
 import { getStudentCourses } from './controllers/student/coursesController';
 import { getStudentEvents } from './controllers/student/calendarController';
 import { getStudentNotifications } from './controllers/student/notificationsController';
+import { getProfessorStudents } from './controllers/professor/studentsController';
+import { getProfessorCourses } from './controllers/professor/coursesController';
+import { getProfessorAssignments } from './controllers/professor/assignmentsController';
+import { getProfessorGrades } from './controllers/professor/gradesController';
+import { getProfessorNotifications } from './controllers/professor/notificationsController';
+import { getProfessorCalendar } from './controllers/professor/calendarController';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -306,6 +312,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Notifications
   app.get('/admin/notifications', checkAdminAuth, getNotifications);
   app.post('/admin/notifications', checkAdminAuth, createNotification);
+
+  // --- PROFESSOR ROUTES ---
+  app.get('/api/professor/students', getProfessorStudents);
+  app.get('/api/professor/courses', getProfessorCourses);
+  app.get('/api/professor/assignments', getProfessorAssignments);
+  app.get('/api/professor/grades', getProfessorGrades);
+  app.get('/api/professor/notifications', getProfessorNotifications);
+  app.get('/api/professor/calendar', getProfessorCalendar);
 
   const httpServer = createServer(app);
   return httpServer;

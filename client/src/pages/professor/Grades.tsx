@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 
-type SubjectGrade = {
+interface SubjectGrade {
   subject: string;
   grade: number;
-};
+}
 
-type GradesData = {
+interface GradesData {
   average: number;
   subjects: SubjectGrade[];
-};
+}
+
+const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
 
 const ProfessorGrades = () => {
   const [grades, setGrades] = useState<GradesData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/professor/grades")
+    fetch(`/api/professor/grades?professorId=${PROFESSOR_ID}`)
       .then((res) => res.json())
       .then((data) => setGrades(data))
       .finally(() => setLoading(false));

@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-type Event = {
+interface Event {
+  id?: number | string;
   title: string;
   date: string;
   time: string;
-};
+}
+
+const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
 
 const Calendar = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/student/calendar")
+    fetch(`/api/student/calendar?studentId=${STUDENT_ID}`)
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .finally(() => setLoading(false));

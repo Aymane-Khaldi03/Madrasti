@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
+import { storage } from "../../storage";
 
-export const getProfessorNotifications = (req: Request, res: Response) => {
-  // TODO: Fetch notifications for the professor from the database
-  res.json([
-    { title: "Meeting Reminder", message: "Department meeting at 3pm.", date: "2025-07-05", read: false },
-    { title: "New Assignment", message: "You have a new assignment to review.", date: "2025-07-04", read: true },
-  ]);
+export const getProfessorNotifications = async (req: Request, res: Response) => {
+  try {
+    const professorId = req.query.professorId as string;
+    if (!professorId) return res.status(400).json({ error: 'professorId is required' });
+    const notifications = await storage.getAllNotifications();
+    const filtered = notifications.filter(n => n.userId === Number(professorId));
+    res.json(filtered);
+  } catch (err) {
+    res.status(500).json({ error: 'Erreur Firestore', details: err });
+  }
 };

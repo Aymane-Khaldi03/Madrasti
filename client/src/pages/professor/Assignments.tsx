@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 
-type Assignment = {
+interface Assignment {
+  id?: number | string;
   title: string;
-  course: string;
+  course?: string;
+  courseId?: number | string;
   due?: string;
   status: string;
-  grade?: string;
-};
+  grade?: string | number;
+}
+
+const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
 
 const ProfessorAssignments: React.FC = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/professor/assignments")
+    fetch(`/api/professor/assignments?professorId=${PROFESSOR_ID}`)
       .then((res) => res.json())
       .then((data) => setAssignments(data))
       .finally(() => setLoading(false));
@@ -42,7 +46,7 @@ const ProfessorAssignments: React.FC = () => {
               assignments.map((a, i) => (
                 <tr key={i} className="hover:bg-gray-50 dark:hover:bg-gray-900 transition">
                   <td className="p-3 font-medium">{a.title}</td>
-                  <td className="p-3">{a.course}</td>
+                  <td className="p-3">{a.course || a.courseId}</td>
                   <td className="p-3">{a.due || "-"}</td>
                   <td className="p-3">
                     <span className={`px-2 py-1 rounded text-xs font-semibold ${a.status === 'Open' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}`}>{a.status}</span>
