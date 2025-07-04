@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import { FileText, Eye, BookOpen, Star } from "lucide-react";
 
 interface Assignment {
@@ -10,8 +11,6 @@ interface Assignment {
   status: string;
   grade?: string | number;
 }
-
-const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
 
 const COLORS = [
   'bg-blue-100 text-blue-600',
@@ -52,15 +51,17 @@ const getGradeBadge = (grade?: string | number) => {
 };
 
 const Assignments = () => {
+  const { user } = useAuth();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/student/assignments?studentId=${STUDENT_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/student/assignments?studentId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setAssignments(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">

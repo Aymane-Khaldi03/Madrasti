@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Student {
   id: string;
@@ -7,19 +8,19 @@ interface Student {
   enrolledCourses: string[];
 }
 
-const PROFESSOR_ID = 1; // À remplacer par l'ID dynamique du professeur connecté
-
 const ProfessorStudents: React.FC = () => {
+  const { user } = useAuth();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch(`/api/professor/students?professorId=${PROFESSOR_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/professor/students?professorId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setStudents(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   const filtered = students.filter(
     (s) =>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import CalendarLib from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { CalendarDays, Clock, BookOpen, AlertCircle, XCircle } from "lucide-react";
@@ -10,8 +11,6 @@ interface Event {
   time: string;
   type?: string; // ex: 'deadline', 'exam', 'event', 'course'
 }
-
-const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
 
 const EVENT_COLORS: Record<string, string> = {
   deadline: 'bg-red-100 text-red-700',
@@ -26,17 +25,19 @@ function formatDate(date: Date) {
 }
 
 const Calendar = () => {
+  const { user } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [modalEvent, setModalEvent] = useState<Event | null>(null);
 
   useEffect(() => {
-    fetch(`/api/student/calendar?studentId=${STUDENT_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/student/calendar?studentId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   // Regroupe les événements par date
   const eventsByDate = events.reduce((acc, ev) => {

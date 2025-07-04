@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 import { BookOpen, User, Eye } from "lucide-react";
 import { Progress } from '@/components/ui/progress';
 
@@ -7,9 +8,9 @@ interface Course {
   title: string;
   professor: string;
   progress: number;
+  credits?: number;
+  schedule?: string;
 }
-
-const STUDENT_ID = 1; // À remplacer par l'ID dynamique de l'étudiant connecté
 
 const COLORS = [
   'bg-blue-100 text-blue-600',
@@ -20,15 +21,17 @@ const COLORS = [
 ];
 
 const MyCourses = () => {
+  const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/student/courses?studentId=${STUDENT_ID}`)
+    if (!user?.id) return;
+    fetch(`/api/student/courses?studentId=${user.id}`)
       .then((res) => res.json())
       .then((data) => setCourses(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
