@@ -196,3 +196,9 @@
     transform: translateY(0);
   }
 }
+
+/* Fix Radix Sheet overlay to not cover the navbar (64px height) */
+[data-radix-sheet-overlay] {
+  top: 4rem !important;
+  height: calc(100vh - 4rem) !important;
+}
