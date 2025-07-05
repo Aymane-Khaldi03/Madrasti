@@ -2,6 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft, GraduationCap, User, LogOut, BookOpen, Calendar, FileText, Bell, Settings, Shield, Users } from "lucide-react"
+import { useLocation } from "wouter"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -23,6 +24,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useAuth } from "@/contexts/AuthContext"
+import { getAllMenu } from "./SidebarNav"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -118,6 +121,17 @@ const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener("keydown", handleKeyDown)
     }, [toggleSidebar])
 
+    // Contrôle de l'overlay mobile
+    React.useEffect(() => {
+      if (isMobile && openMobile) {
+        // Rendre l'overlay totalement transparent
+        const overlay = document.querySelector('[data-radix-portal] [data-radix-overlay]');
+        if (overlay) {
+          overlay.setAttribute('style', 'background: transparent !important; backdrop-filter: none !important;');
+        }
+      }
+    }, [isMobile, openMobile]);
+
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? "expanded" : "collapsed"
@@ -162,32 +176,44 @@ const SidebarProvider = React.forwardRef<
 )
 SidebarProvider.displayName = "SidebarProvider"
 
-// Mapping des liens par rôle
-const sidebarLinks: Record<string, { label: string; icon: JSX.Element; href: string }[]> = {
-  professor: [
-    { label: 'Dashboard', icon: <User />, href: '/professor' },
-    { label: 'Mes cours', icon: <BookOpen />, href: '/professor/mycourses' },
-    { label: 'Devoirs', icon: <FileText />, href: '/professor/assignments' },
-    { label: 'Notes', icon: <Settings />, href: '/professor/grades' },
-    { label: 'Calendrier', icon: <Calendar />, href: '/professor/calendar' },
-    { label: 'Notifications', icon: <Bell />, href: '/professor/notifications' },
-  ],
-  student: [
-    { label: 'Dashboard', icon: <User />, href: '/student' },
-    { label: 'Mes modules', icon: <BookOpen />, href: '/student/mycourses' },
-    { label: 'Devoirs', icon: <FileText />, href: '/student/assignments' },
-    { label: 'Notes', icon: <Settings />, href: '/student/grades' },
-    { label: 'Calendrier', icon: <Calendar />, href: '/student/calendar' },
-    { label: 'Notifications', icon: <Bell />, href: '/student/notifications' },
-  ],
-  admin: [
-    { label: 'Dashboard', icon: <Shield />, href: '/admin' },
-    { label: 'Utilisateurs', icon: <Users />, href: '/admin/users' },
-    { label: 'Cours', icon: <BookOpen />, href: '/admin/courses' },
-    { label: 'Paramètres', icon: <Settings />, href: '/admin/settings' },
-    { label: 'Notifications', icon: <Bell />, href: '/admin/notifications' },
-  ],
-};
+// Adapter SidebarLinks pour accepter { to, icon, label, role }
+interface SidebarLink {
+  to: string;
+  icon: JSX.Element;
+  label: string;
+  role: string;
+}
+interface SidebarLinksProps {
+  links: SidebarLink[];
+  currentPath: string;
+  onLinkClick?: (e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>, href: string) => void;
+}
+function SidebarLinks({ links, currentPath, onLinkClick }: SidebarLinksProps) {
+  return (
+    <nav className="flex-1 flex flex-col gap-2">
+      {links.map((link) => (
+        <a
+          key={link.to}
+          href={link.to}
+          className={cn(
+            "flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 active:scale-95 cursor-pointer",
+            currentPath === link.to 
+              ? "bg-blue-200 dark:bg-blue-800 border-l-4 border-blue-500 dark:border-blue-300 text-blue-900 dark:text-blue-100 shadow-md" 
+              : "hover:bg-blue-100 dark:hover:bg-blue-800 hover:shadow-sm text-blue-800 dark:text-blue-200"
+          )}
+          aria-label={typeof link.label === 'string' ? link.label : undefined}
+          tabIndex={0}
+          onMouseDown={onLinkClick ? (e) => { e.preventDefault(); e.stopPropagation(); } : undefined}
+          onClick={onLinkClick ? (e) => onLinkClick(e, link.to) : undefined}
+          onTouchEnd={onLinkClick ? (e) => onLinkClick(e, link.to) : undefined}
+        >
+          <div className="flex-shrink-0">{link.icon}</div>
+          <span className="transition-all duration-300">{link.label}</span>
+        </a>
+      ))}
+    </nav>
+  );
+}
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,
@@ -213,9 +239,11 @@ const Sidebar = React.forwardRef<
     // Use only the context state for mobile sidebar
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
     const { user, signOut } = useAuth();
+    const { t } = useLanguage();
     const role = user?.role || 'student';
-    const links: { label: string; icon: JSX.Element; href: string }[] = sidebarLinks[role] || sidebarLinks['student'];
+    const links: SidebarLink[] = getAllMenu(t).filter((item: SidebarLink) => item.role === role);
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+    const [, navigate] = useLocation();
 
     if (collapsible === "none") {
       return (
@@ -236,24 +264,8 @@ const Sidebar = React.forwardRef<
             <div className="font-bold text-lg text-blue-900 dark:text-blue-100">{user?.name || 'Utilisateur'}</div>
             <div className="text-xs text-blue-600 dark:text-blue-300 font-semibold">{role.charAt(0).toUpperCase() + role.slice(1)}</div>
           </div>
-          {/* Liens dynamiques */}
-          <nav className="flex-1 flex flex-col gap-2">
-            {links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-base transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400",
-                  currentPath === link.href ? "bg-blue-200 dark:bg-blue-800 border-l-4 border-blue-500 dark:border-blue-300 text-blue-900 dark:text-blue-100" : "hover:bg-blue-100 dark:hover:bg-blue-800",
-                )}
-                aria-label={link.label}
-                tabIndex={0}
-              >
-                {link.icon}
-                <span className="transition-all duration-300">{link.label}</span>
-              </a>
-            ))}
-          </nav>
+          {/* Liens dynamiques mutualisés */}
+          <SidebarLinks links={links} currentPath={currentPath} />
           {/* Déconnexion en bas */}
           <div className="mt-8">
             <button
@@ -269,6 +281,15 @@ const Sidebar = React.forwardRef<
     }
 
     if (isMobile) {
+      // Handler pour la navigation mobile (ferme la sidebar avant navigation)
+      const handleMobileNav = (e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>, href: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpenMobile(false);
+        setTimeout(() => {
+          navigate(href);
+        }, 200);
+      };
       return (
         <Sheet
           open={openMobile}
@@ -278,7 +299,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="z-30 w-full max-w-xs sm:max-w-sm bg-sidebar p-0 text-sidebar-foreground rounded-tr-3xl rounded-br-3xl shadow-inner shadow-2xl transition-transform duration-500 ease-in-out !left-0"
+            className="z-50 w-full max-w-xs sm:max-w-sm bg-sidebar p-0 text-sidebar-foreground rounded-tr-3xl rounded-br-3xl shadow-inner shadow-2xl transition-transform duration-500 ease-in-out !left-0 border-0"
             style={{
               top: '4rem',
               height: 'calc(100vh - 4rem)',
@@ -289,25 +310,45 @@ const Sidebar = React.forwardRef<
             tabIndex={0}
             aria-modal="true"
             aria-label="Menu latéral mobile"
+            onPointerDownOutside={(e) => {
+              e.preventDefault();
+              setOpenMobile(false);
+            }}
+            onEscapeKeyDown={() => setOpenMobile(false)}
           >
-            <SheetHeader className="sr-only">
-              <SheetTitle>Sidebar</SheetTitle>
-              <SheetDescription>Displays the mobile sidebar.</SheetDescription>
-            </SheetHeader>
-            <div className="flex h-full w-full flex-col">
-              <button
-                className="fixed top-4 left-4 z-50 flex md:hidden items-center justify-center w-12 h-12 rounded-full bg-white/80 shadow-lg backdrop-blur-md transition-all focus:ring-2 focus:ring-blue-400 outline-none"
-                aria-label={openMobile ? 'Fermer le menu' : 'Ouvrir le menu'}
-                aria-expanded={openMobile}
-                onClick={() => setOpenMobile(!openMobile)}
-                tabIndex={0}
-              >
-                <span className={`block w-6 h-0.5 bg-blue-900 rounded transition-all duration-300 ${openMobile ? 'rotate-45 translate-y-2' : ''}`}></span>
-                <span className={`block w-6 h-0.5 bg-blue-900 rounded transition-all duration-300 my-1 ${openMobile ? 'opacity-0' : ''}`}></span>
-                <span className={`block w-6 h-0.5 bg-blue-900 rounded transition-all duration-300 ${openMobile ? '-rotate-45 -translate-y-2' : ''}`}></span>
-              </button>
-              {/* Focus trap et scroll lock natifs via Sheet/SheetContent */}
-              {children}
+            {/* Navigation mutualisée, identique desktop, strictement selon allMenu */}
+            <div className="flex-1 flex flex-col overflow-y-auto p-4">
+              <SidebarLinks links={links} currentPath={currentPath} onLinkClick={handleMobileNav} />
+              {/* Déconnexion */}
+              <div className="mt-6 pt-4 border-t border-blue-200 dark:border-blue-800">
+                <button
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 font-semibold shadow hover:bg-red-200 dark:hover:bg-red-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 active:scale-95 cursor-pointer"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setOpenMobile(false);
+                    setTimeout(() => {
+                      signOut();
+                    }, 200);
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setOpenMobile(false);
+                    setTimeout(() => {
+                      signOut();
+                    }, 200);
+                  }}
+                  aria-label="Déconnexion"
+                >
+                  <LogOut className="w-5 h-5" /> 
+                  <span>Déconnexion</span>
+                </button>
+              </div>
             </div>
           </SheetContent>
         </Sheet>

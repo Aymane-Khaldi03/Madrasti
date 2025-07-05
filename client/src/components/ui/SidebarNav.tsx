@@ -22,23 +22,8 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-export default function SidebarNav() {
-  const [location] = useLocation();
-  const { user } = useAuth();
-  const { state } = useSidebar();
-  const { t, language } = useLanguage();
-
-  const link = (to: string) => location === to;
-
-  interface MenuItem {
-    to: string;
-    icon: React.ReactNode;
-    label: string;
-    role: "admin" | "professor" | "student";
-  }
-
-  // Combine all menu items with their roles
-  const allMenu: MenuItem[] = [
+export function getAllMenu(t: (key: string) => string) {
+  return [
     // Admin
     { to: "/admin", icon: <Home />, label: t("navigation.dashboard"), role: "admin" },
     { to: "/admin/users", icon: <Users />, label: t("navigation.users"), role: "admin" },
@@ -64,10 +49,26 @@ export default function SidebarNav() {
     { to: "/student/calendar", icon: <Calendar />, label: t("navigation.calendar"), role: "student" },
     { to: "/student/notifications", icon: <Bell />, label: t("navigation.notifications"), role: "student" },
   ];
+}
+
+export default function SidebarNav() {
+  const [location] = useLocation();
+  const { user } = useAuth();
+  const { state } = useSidebar();
+  const { t, language } = useLanguage();
+
+  const link = (to: string) => location === to;
+
+  interface MenuItem {
+    to: string;
+    icon: React.ReactNode;
+    label: string;
+    role: string;
+  }
 
   let menu: MenuItem[] = [];
   if (user?.role) {
-    menu = allMenu.filter((item) => item.role === user.role);
+    menu = getAllMenu(t).filter((item) => item.role === user.role);
   }
 
   return (
